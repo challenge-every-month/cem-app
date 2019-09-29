@@ -1,0 +1,8 @@
+__tests__
+package.json
+node_modules/
+.eslintignore
+.eslintrc.js
+.prettierrc.js
+.jest.config.js
+/functions/lib/

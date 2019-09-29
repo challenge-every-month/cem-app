@@ -1,0 +1,6 @@
+pre-commit:
+  parallel: true
+  commands:
+    linter:
+      glob: "*.{js,ts}"
+      run: npx eslint --ignore-path .eslintignore {staged_files}
