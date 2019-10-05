@@ -46,6 +46,8 @@ module.exports = {
     'space-after-keywords': 'off',
     'space-return-throw-case': 'off',
     'require-jsdoc': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
     'camelcase': 'off'
   },
