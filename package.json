@@ -12,7 +12,8 @@
     "start": "node ./dist/index.js",
     "watch": "nodemon",
     "dev": "nf start -x 3000",
-    "test": "jest"
+    "test": "jest",
+    "commit": "npx git-cz"
   },
   "config": {
     "commitizen": {
