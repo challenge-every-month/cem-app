@@ -1,12 +1,11 @@
 import * as admin from 'firebase-admin'
 
-const serviceAccount = require(`../../serviceAccountKey.json`)
-
 if (process.env.NODE_ENV === `production`) {
   admin.initializeApp({
     credential: admin.credential.applicationDefault(),
   })
 } else {
+  const serviceAccount = require(`../../serviceAccountKey.json`)
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   })
