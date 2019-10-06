@@ -29,12 +29,29 @@ Challenge Every Monthコミュニティ用SlackApp。
   + [ ] どちらもされているが進捗確認を促す場合
 + [ ] 月の終わりに振り返りを促すためのリマインド
 
+### ディレクトリ構造
+```sh
+.
+├── .env # 環境変数格納ファイル
+├── Procfile # 開発環境起動設定ファイル
+├── README.md
+├── __tests__ # テストコード用ディレクトリ
+├── dist # buildされたコードの格納先
+├── serviceAccountKey.json # ローカル開発環境で使うFirebase用のキー
+└── src
+    ├── commands # スラッシュコマンド用コード ディレクトリ
+    ├── index.ts # サーバー起動コード
+    ├── initializers # BoltやFirestoreの初期化コードディレクトリ
+    ├── listeners # ModalやAction,イベントのリスニング用コード ディレクトリ
+    └── types # 型定義ディレクトリ
+```
+
 ## 開発
 ### Requirement
 + Node.js(v10以降）
 + autossh（動作確認にserveoを使用する場合のみ）
 + Firestore（開発、動作確認用）
-+ Slackワークグループ（開発、動作確認用）
++ Slackワークスペース（開発、動作確認用）
 
 ```sh
 $ npm install # or $ yarn install
@@ -52,10 +69,26 @@ $ brew install autossh
 
 を実行します。
 
+ngrokなどを使う場合は`Procfile`を適宜変更してください。
+
 #### Firestore
 永続データの保存先としてFirestoreを使用します。開発者が開発中のコードを動作確認をするためにはご自身でFirestoreを用意する必要があります。
-Firestoreを用意した後、「[Cloud Firestore を使ってみる  \|  Firebase](https://firebase.google.com/docs/firestore/quickstart?hl=ja)」を参考に[サービスアカウント]https://cloud.google.com/compute/docs/authentication?hl=ja）経由でJSONファイルの鍵を作成してください。
+Firestoreを用意した後、「[Cloud Firestore を使ってみる  \|  Firebase](https://firebase.google.com/docs/firestore/quickstart?hl=ja)」を参考に[サービスアカウント](https://cloud.google.com/compute/docs/authentication?hl=ja)経由でJSONファイルの鍵を作成してください。
 その鍵をプロジェクトルートに`serviceAccountKey.json`という名前のファイルで設置してください。
+
+
+#### Slack連携
+実際の動作確認はSlackを使いますが、本番とは別に開発用のSlackワークスペースの使用を想定しています。これは開発者自身が用意する必要があります。
+ワークスペースを立てたら、SlackAppのインストールにすすみ、`Bot User OAuth Access Token
+`と`Signing Secret`をそれぞれ発行してください。
+
+それらを`.env`に
+```env
+SLACK_BOT_TOKEN="xoxb-xxxxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"
+SLACK_SIGNING_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+```
+
+のように設定すると開発環境で読み込まれます
 
 #### 開発用ローカルサーバーの起動
 その後、上に記載のように
@@ -69,12 +102,13 @@ $ npm run dev
 
 ### デプロイ
 デプロイはPullRequestをマージ時に自動的に実行されるため意識する必要はありません。
+新しいSlashコマンドを追加した際などはSlack側の設定変更が必要になるケースがあります。
 
 ### PullRequestとcommit
 PullRequestは大歓迎です。
 その際は自動で表示されるテンプレートに従うと書きやすいので是非ご活用ください。
 
-commitの際は`npm run commit`や`yarn commit`を実行すると対話的にコミットメッセージを作成できるのでご活用ください（必須ではありません）。
+commitの際は`npm run commit`か`yarn commit`を実行すると対話的にコミットメッセージを作成できるのでご活用ください（必須ではありません）。
 
 ### 問題報告/機能要望
 問題報告、機能要望、どちらも歓迎しています。こちらもテンプレートを用意していますので是非ご活用ください。
