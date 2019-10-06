@@ -15,3 +15,22 @@
 
 # Node.js dependencies:
 node_modules/
+
+# files for development
+__tests__/
+.circleci/
+.github/
+.cz-config.js
+.editorconfig
+.eslintignore
+.eslintrc.js
+lefthook.yml
+nodemon.json
+Procfile
+
+# secret for development
+.env
+serviceAccountKey.json
+
+# avoid deploy source
+/src/

@@ -1,6 +1,6 @@
-import { app } from '@/bolt/setup'
-import { firestore, FieldValue } from '@/bolt/firebase'
-import { Message } from 'types/slack'
+import { app } from '../initializers/bolt'
+import { firestore, FieldValue } from '../initializers/firebase'
+import { Message } from '../types/slack'
 
 export default function() {
   app.command(`/cem_register`, async ({ payload, ack, context }) => {
