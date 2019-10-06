@@ -1,5 +1,5 @@
-import { app } from '@/bolt/setup'
-import { Option, Modal, Message } from 'types/slack'
+import { app } from '../initializers/bolt'
+import { Option, Modal, Message } from '../types/slack'
 
 export default function() {
   app.command(`/cem_new`, async ({ payload, ack, context }) => {
