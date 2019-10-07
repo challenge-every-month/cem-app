@@ -2,6 +2,7 @@ import { app } from './initializers/bolt'
 import echo from './commands/echo'
 import cem_register from './commands/cem_register'
 import cem_new from './commands/cem_new'
+import cem_publish from './commands/cem_publish'
 import res_cem_new from './listeners/res_cem_new'
 ;(async () => {
   // Start your app
@@ -13,3 +14,4 @@ echo()
 cem_register()
 cem_new()
 res_cem_new()
+cem_publish()
