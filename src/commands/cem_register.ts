@@ -1,6 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Message } from '../types/slack'
+import { Message, Challenger } from '../types/slack'
 
 export default function() {
   app.command(`/cem_register`, async ({ payload, ack, context }) => {
@@ -30,14 +30,15 @@ export default function() {
       }
 
       // firestoreにユーザー作成
+      const challenger: Challenger = {
+        slackName: body.user_name,
+        displayName: body.text || body.user_name,
+        updatedAt: FieldValue.serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
+      }
       await challengersRef
         .doc(body.user_id)
-        .set({
-          slackName: body.user_name,
-          displayName: body.text || body.user_name,
-          updatedAt: FieldValue.serverTimestamp(),
-          createdAt: FieldValue.serverTimestamp(),
-        })
+        .set(challenger)
         .catch(err => {
           throw new Error(err)
         })

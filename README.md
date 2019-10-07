@@ -18,7 +18,7 @@ Challenge Every Monthコミュニティ用SlackApp。
 + [x] cem_new: プロジェクトとチャレンジの登録
 + [ ] cem_edit: 登録されたプロジェクトとチャンレンジの修正、変更
 + [ ] cem_delete: 登録されたプロジェクトとチャンレンジの削除
-+ [ ] cem_publish: 登録されたプロジェクトの表明
++ [x] cem_publish: 登録されたプロジェクトの表明
 + [ ] cem_review: 表明されているプロジェクトの振り返り
 
 ### リマインダー設定
