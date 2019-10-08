@@ -24,7 +24,7 @@ export default function() {
       month: Number(month),
       title: projectTitle,
       status: `draft`,
-      description: payload.description.description.value,
+      description: payload.description.description.value || ``,
       updatedAt: timestamp,
       createdAt: timestamp,
     }

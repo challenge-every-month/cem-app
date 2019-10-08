@@ -104,6 +104,11 @@ export default function() {
             {
               type: `input`,
               block_id: `month`,
+              label: {
+                type: `plain_text`,
+                text: `月`,
+                emoji: true,
+              },
               element: {
                 type: `static_select`,
                 action_id: `month`,
@@ -121,11 +126,6 @@ export default function() {
                   },
                   value: `${thisMonth}`,
                 },
-              },
-              label: {
-                type: `plain_text`,
-                text: `月`,
-                emoji: true,
               },
             },
             {
