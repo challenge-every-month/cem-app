@@ -9,6 +9,10 @@ jobs:
       - image: google/cloud-sdk:latest
 
     steps:
+      - run:
+          name: start to deploy
+          command: |
+            curl https://challenge-every-month-404e2.appspot.com/slack/deploying
       - checkout
       - run:
           name: Overwrite env variables
@@ -28,6 +32,10 @@ jobs:
           name: Deploy to Google App Engine
           command: |
             gcloud app --quiet deploy app.yaml
+      - run:
+          name: deployed successfully
+          command: |
+            curl https://challenge-every-month-404e2.appspot.com/slack/deployed
 
 workflows:
   version: 2
