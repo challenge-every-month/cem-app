@@ -6,5 +6,7 @@ automatic_scaling:
   max_pending_latency: automatic
 
 handlers:
-  - url: /img
-    static_dir: img
+  - url: /favicon\.ico
+    static_files: favicon.ico
+  - url: /static
+    static_dir: public
