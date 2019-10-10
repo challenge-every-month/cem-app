@@ -11,8 +11,6 @@ export default function() {
     const metadata = body.view.private_metadata
     const projectId = payload.project.projectId.selected_option.value
 
-    console.log(payload.project)
-
     const projectRef = firestore.collection(`projects`).doc(projectId)
     const project = await projectRef.get()
     const projData = project.data()

@@ -48,6 +48,7 @@ export default function() {
         text: `*Here comes a new challenger!*\n挑戦者[${body.text ||
           body.user_name}]さんを新規登録しました`,
         channel: body.channel_id,
+        icon_url: `https://challenge-every-month-404e2.appspot.com/static/boy_good.png`,
       }
       return app.client.chat.postMessage(msg).catch(err => {
         throw new Error(err)

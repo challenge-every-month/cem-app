@@ -4,23 +4,20 @@ import { Block, Message } from '../types/slack'
 const config = require(`config`)
 
 export default function() {
-  app.command(`/cem_publish`, async ({ payload, ack, context }) => {
+  app.view(`cem_review`, async ({ ack, body, context }) => {
     ack()
+    // const payload = view.state.values
+    const user = body.user.id
+    const channel = config.get(`Slack.Channels.review`)
+    // const metadata = body.view.private_metadata
 
-    const now = new Date()
-    const thisYear = now.getFullYear()
-    const thisMonth = now.getMonth() + 1
-    const channel = config.get(`Slack.Channels.publish`)
-
-    const challengerRef = firestore
-      .collection(`challengers`)
-      .doc(payload.user_id)
+    const challengerRef = firestore.collection(`challengers`).doc(user)
     const projectsRef = firestore.collection(`projects`)
     const projectsQuery = projectsRef
       .where(`challenger`, `==`, challengerRef)
-      .where(`year`, `==`, thisYear)
-      .where(`month`, `==`, thisMonth)
-      .where(`status`, `==`, `draft`)
+      .where(`status`, `==`, `published`)
+    // .where(`year`, `==`, thisYear)
+    // .where(`month`, `==`, thisMonth)
 
     try {
       const projects = await projectsQuery.get().catch(err => {
@@ -31,9 +28,9 @@ export default function() {
       if (projects.empty) {
         const msg: Message = {
           token: context.botToken,
-          text: `プロジェクトが登録されていません`,
+          text: `振り返るプロジェクトが見つかりませんでした`,
           channel: channel,
-          user: payload.user_id,
+          user: user,
         }
         return app.client.chat.postEphemeral(msg)
       }
@@ -44,13 +41,13 @@ export default function() {
           type: `section`,
           text: {
             type: `mrkdwn`,
-            text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
+            text: `${challengerName}さんが挑戦目標を振り返りました`,
           },
         },
       ]
       for (const project of projects.docs) {
         batch.update(project.ref, {
-          status: `published`,
+          status: `reviewed`,
           updatedAt: timestamp,
         })
         let projectText = ``
@@ -58,12 +55,20 @@ export default function() {
         projectText += `>>>*${projData.title}*\n`
         const challenges = await project.ref.collection(`challenges`).get()
         for (const challenge of challenges.docs) {
-          batch.update(challenge.ref, {
-            status: `trying`,
-            updatedAt: timestamp,
-          })
           const chalData = challenge.data()
-          projectText += `• ${chalData.name}\n`
+          let icon = ``
+          switch (chalData.status) {
+            case `completed`:
+              icon = `:white_check_mark:`
+              break
+            case `incompleted`:
+              icon = `:x:`
+              break
+            default:
+              icon = `:black_square_button:`
+              break
+          }
+          projectText += `${icon} ${chalData.name}\n`
         }
         projectText += `${projData.description}`
         blocks.push({
@@ -79,7 +84,7 @@ export default function() {
         token: context.botToken,
         text: {
           type: `mrkdwn`,
-          text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
+          text: `${challengerName}さんが挑戦目標を振り返りました`,
         },
         blocks: blocks,
         channel: channel,
@@ -93,7 +98,7 @@ export default function() {
         token: context.botToken,
         text: `Error: ${error}`,
         channel: channel,
-        user: payload.user_id,
+        user: user,
       }
       return app.client.chat.postEphemeral(msg)
     }
