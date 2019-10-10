@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
 import { Block, Message } from '../types/slack'
+const config = require(`config`)
 
 export default function() {
   app.command(`/cem_publish`, async ({ payload, ack, context }) => {
@@ -9,6 +10,7 @@ export default function() {
     const now = new Date()
     const thisYear = now.getFullYear()
     const thisMonth = now.getMonth() + 1
+    const channel = config.get(`Slack.Channels.publish`)
 
     const challengerRef = firestore
       .collection(`challengers`)
@@ -30,7 +32,7 @@ export default function() {
         const msg: Message = {
           token: context.botToken,
           text: `プロジェクトが登録されていません`,
-          channel: payload.channel_id,
+          channel: channel,
           user: payload.user_id,
         }
         return app.client.chat.postEphemeral(msg)
@@ -80,7 +82,7 @@ export default function() {
           text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
         },
         blocks: blocks,
-        channel: payload.channel_id,
+        channel: channel,
       }
       return app.client.chat.postMessage(msg).catch(err => {
         throw new Error(err)
@@ -90,7 +92,7 @@ export default function() {
       const msg: Message = {
         token: context.botToken,
         text: `Error: ${error}`,
-        channel: payload.channel_id,
+        channel: channel,
         user: payload.user_id,
       }
       return app.client.chat.postEphemeral(msg)
