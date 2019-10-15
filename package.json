@@ -7,12 +7,13 @@
     "node": ">=10.0.0"
   },
   "scripts": {
-    "prestart": "npx tsc -p .",
-    "build": "npx tsc -p .",
+    "prestart": "tsc -p .",
+    "build": "tsc -p .",
     "start": "node ./dist/index.js",
     "watch": "nodemon",
     "dev": "nf start",
     "test": "jest",
+    "lint": "eslint **/*.ts",
     "commit": "npx git-cz"
   },
   "config": {
