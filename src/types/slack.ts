@@ -54,6 +54,7 @@ export interface Message {
   blocks?: Block[]
   icon_emoji?: string
   icon_url?: string
+  username?: string
 }
 export interface Challenger {
   slackName: string
