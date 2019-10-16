@@ -23,6 +23,7 @@ export default function() {
       token: process.env.SLACK_BOT_TOKEN,
       text: `おめでとう！CEMたろうは新しいバージョンに進化した！`,
       channel: channels.development,
+      username: `進化したCEMたろう`,
       icon_url: `https://challenge-every-month-404e2.appspot.com/static/boy_fire.png`,
     }
     return app.client.chat.postMessage(msg).catch(err => {

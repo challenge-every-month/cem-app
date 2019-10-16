@@ -36,6 +36,34 @@ jobs:
           name: deployed successfully
           command: |
             curl https://challenge-every-month-404e2.appspot.com/slack/deployed
+  lint:
+    docker:
+      - image: circleci/node:10
+    steps:
+      - restore_cache:
+          keys:
+            - source-v1-{{ .Branch }}-{{ .Revision }}
+            - source-v1-{{ .Branch }}-
+            - source-v1-
+      - checkout
+      - save_cache:
+          key: source-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - .git
+      - restore_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+      - run: yarn install
+      - save_cache:
+          key: yarn-packages-{{ checksum "yarn.lock" }}
+          paths:
+            - node_modules
+      - run:
+          name: lint
+          command: |
+            mkdir -p /tmp/test-reports/eslint
+            yarn lint --quiet --format junit --output-file /tmp/test-reports/eslint/results.xml
+      - store_test_results:
+          path: /tmp/test-reports
 
 workflows:
   version: 2
@@ -46,3 +74,8 @@ workflows:
             branches:
               only:
                 - master
+      - lint:
+          filters:
+            branches:
+              only:
+                - /^(?!master$).+$/

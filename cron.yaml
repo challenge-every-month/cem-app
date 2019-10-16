@@ -1,5 +1,5 @@
 cron:
   - description: schduled remind
     url: /slack/remind
-    schedule: every 1 days 10:00
+    schedule: every day 10:00
     timezone: Asia/Tokyo

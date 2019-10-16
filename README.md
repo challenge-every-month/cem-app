@@ -1,6 +1,9 @@
 # CEM-App
 Challenge Every Monthコミュニティ用SlackApp。
 
+[Project管理](https://github.com/AquiTCD/cem-app/projects/1): RoadmapやTodoを管理しています。
+
+
 ## 環境
 + Node.js（v10)
 + Google App Engine
@@ -17,17 +20,17 @@ Challenge Every Monthコミュニティ用SlackApp。
 + [x] cem_register: 挑戦者登録
 + [x] cem_new: プロジェクトとチャレンジの登録
 + [ ] cem_edit: 登録されたプロジェクトとチャンレンジの修正、変更
-+ [ ] cem_delete: 登録されたプロジェクトとチャンレンジの削除
++ [x] cem_delete: 登録されたプロジェクトとチャンレンジの削除
 + [x] cem_publish: 登録されたプロジェクトの表明
-+ [ ] cem_review: 表明されているプロジェクトの振り返り
++ [x] cem_review: 表明されているプロジェクトの振り返り
 
 ### リマインダー設定
-+ [ ] 月の始めに挑戦目標を表明するようにリマインド
++ [x] 月の始めに挑戦目標を表明するようにリマインド
 + [ ] 月の一定の日時にまだ行なわれてないものにリマインド
   + [ ] まだ前月の振り返りが行われてない場合
   + [ ] まだ今月の挑戦目標を表明されてない場合
-  + [ ] どちらもされているが進捗確認を促す場合
-+ [ ] 月の終わりに振り返りを促すためのリマインド
+  + [x] どちらもされているが進捗確認を促す場合
++ [x] 月の終わりに振り返りを促すためのリマインド
 
 ### ディレクトリ構造
 ```sh
@@ -58,6 +61,16 @@ $ npm install # or $ yarn install
 $ npm run dev # or $ yarn dev
 ```
 
+### 自動リント（Optional）
+Lefthookを用いてコミット時にPrettierとESLintが自動で実行されるようにできます。
+Lefthookの有効化は
+
+```
+$ npx lefthook install
+```
+
+を実行してください。
+
 ### 動作確認について
 #### autossh
 開発中のコードを動作確認しやすいようにデフォルトのコマンドにはserveoを使うことを前提としています。serveoはsshでつなぎますが、接続が切れやすいのでautosshを併用することも合わせて前提としています。
@@ -69,7 +82,7 @@ $ brew install autossh
 
 を実行します。
 
-ngrokなどを使う場合は`Procfile`を適宜変更してください。
+ngrokなどを使う場合はServeoと同時に動かしつつ`3000`番のポートに接続するか、`Procfile`を適宜変更してください。
 
 #### Firestore
 永続データの保存先としてFirestoreを使用します。開発者が開発中のコードを動作確認をするためにはご自身でFirestoreを用意する必要があります。
@@ -82,13 +95,18 @@ Firestoreを用意した後、「[Cloud Firestore を使ってみる  \|  Fire
 ワークスペースを立てたら、SlackAppのインストールにすすみ、`Bot User OAuth Access Token
 `と`Signing Secret`をそれぞれ発行してください。
 
-それらを`.env`に
+それらを`.env.sample`を`.env`にリネームして
 ```env
+PORT=3000
+SERVEO="cem-app-dev"
 SLACK_BOT_TOKEN="xoxb-xxxxxxxxxxxx-xxxxxxxxxxxx-xxxxxxxxxxxxxxxxxxxxxxxx"
 SLACK_SIGNING_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 ```
 
-のように設定すると開発環境で読み込まれます
+SLACK_BOT_TOKEN, SLACK_SIGNING_SECRETにそれぞれ正しい値を設定します。
+またSERVEOの変数はそのままServeoのサブドメインになります。他の開発者と同じにならないような任意の文字列に変更します。
+
+これらを正しく設定することで開発環境で読み込まれます。
 
 #### 開発用ローカルサーバーの起動
 その後、上に記載のように
@@ -96,8 +114,7 @@ SLACK_SIGNING_SECRET="xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 $ npm run dev
 ```
 
-を実行するとautossh経由でserveoと接続をします。serveoはデフォルトでは`https://cem-dev.serveo.net`に接続します。これは`Procfile`に記載されています。他の開発者が使用しているケースを考慮して変更されることをオススメします。
-
+を実行するとautossh経由でserveoと接続をします。
 なお、nodemonを使ってファイルの保存時に自動的にサーバーに適用しているため、一度起動したらその後は意識する必要はありません。
 
 ### デプロイ
