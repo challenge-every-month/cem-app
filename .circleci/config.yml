@@ -22,13 +22,6 @@ jobs:
             echo "  SLACK_SIGNING_SECRET: ${SLACK_SIGNING_SECRET}" >> app.yaml
       - gcp-cli/initialize
       - run:
-          name: build
-          command: |
-            curl -sL https://deb.nodesource.com/setup_10.x | bash -
-            apt-get install -y nodejs
-            npm i
-            npm run build
-      - run:
           name: Deploy to Google App Engine
           command: |
             gcloud app --quiet deploy app.yaml
