@@ -33,4 +33,4 @@ Procfile
 serviceAccountKey.json
 
 # avoid deploy source
-/src/
+/dist/
