@@ -1,12 +1,16 @@
 runtime: nodejs10
+instance_class: F1
 automatic_scaling:
-  min_idle_instances: automatic # idle状態にあるインスタンスの最小値
-  max_idle_instances: 1 # idle状態にあるインスタンスの最大値
-  min_pending_latency: 3000ms # リクエストを処理するまでに許される待ち時間の最小
+  min_idle_instances: automatic
+  max_idle_instances: 1
+  min_pending_latency: 3000ms
   max_pending_latency: automatic
-
+  target_cpu_utilization: 0.95
+  target_throughput_utilization: 0.95
+  max_concurrent_requests: 80
 handlers:
-  # - url: /favicon\.ico
-  #   static_files: favicon.ico
+  - url: /favicon.ico
+    static_files: favicon.ico
+    upload: /static/favicon.ico
   - url: /static
     static_dir: public
