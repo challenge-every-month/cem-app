@@ -12,11 +12,13 @@ import res_cem_review_all from './listeners/res_cem_review_all'
 
 import remind from './requests/remind'
 import deploy from './requests/deploy'
+import pages from './requests/pages'
+import notFound from './requests/404'
 ;(async () => {
   // Start your app
   // await app.receiver.start()
   const server = await app.start(process.env.PORT || 3000)
-
+  app.receiver.app.set(`view engine`, `pug`)
   console.log(`⚡️ Bolt app is running! PORT: ${server.address().port}`)
 })()
 
@@ -32,3 +34,6 @@ res_cem_review_challenge()
 res_cem_review_all()
 remind()
 deploy()
+
+pages()
+notFound()
