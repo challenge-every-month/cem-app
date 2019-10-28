@@ -54,6 +54,7 @@
     "config": "^3.2.3",
     "firebase-admin": "^8.6.0",
     "firebase-functions": "^3.2.0",
+    "pug": "^2.0.4",
     "typescript": "^3.6.3"
   },
   "jest": {
