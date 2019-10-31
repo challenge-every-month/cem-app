@@ -24,7 +24,7 @@ jobs:
       - run:
           name: Deploy to Google App Engine
           command: |
-            gcloud app --quiet deploy app.yaml
+            gcloud app --quiet deploy app.yaml cron.yaml
       - run:
           name: deployed successfully
           command: |
