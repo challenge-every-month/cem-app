@@ -73,6 +73,26 @@ export default function() {
         }
         projectBlocks.push(challengeBlock)
       }
+      const reviewComment = {
+        type: `input`,
+        block_id: `review_${project.ref.id}`,
+        label: {
+          type: `plain_text`,
+          text: `レビューコメント`,
+          emoji: true,
+        },
+        optional: true,
+        element: {
+          type: `plain_text_input`,
+          multiline: true,
+          action_id: `comment`,
+          placeholder: {
+            type: `plain_text`,
+            text: `${projData.title}の振り返り`,
+          },
+        },
+      }
+      projectBlocks.push(reviewComment)
     }
     try {
       const modal = {
