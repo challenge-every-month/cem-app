@@ -59,6 +59,7 @@ export interface Message {
 export interface Challenger {
   slackName: string
   displayName: string
+  iconUrl: string
   updatedAt: any
   createdAt: any
 }
