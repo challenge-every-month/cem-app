@@ -4,9 +4,10 @@ import { Block, Message } from '../types/slack'
 const config = require(`config`)
 
 export default function() {
-  app.view(`cem_review`, async ({ ack, body, context }) => {
+  app.view(`cem_review`, async ({ ack, body, view, context }) => {
     ack()
-    // const payload = view.state.values
+    const payload = view.state.values
+
     const user = body.user.id
     const channel = config.get(`Slack.Channels.review`)
     // const metadata = body.view.private_metadata
@@ -47,8 +48,10 @@ export default function() {
         },
       ]
       for (const project of projects.docs) {
+        const comment = payload[`review_${project.ref.id}`].comment.value || ``
         batch.update(project.ref, {
           status: `reviewed`,
+          reviewComment: comment,
           updatedAt: timestamp,
         })
         let projectText = ``
@@ -71,7 +74,8 @@ export default function() {
           }
           projectText += `${icon} ${chalData.name}\n`
         }
-        projectText += `${projData.description}`
+        // projectText += `${projData.description}`
+        projectText += comment
         blocks.push({
           type: `section`,
           text: {
