@@ -39,6 +39,7 @@ export default function() {
       }
       const challenger = await challengerRef.get()
       const challengerName = challenger.data()!.displayName
+      const iconUrl = challenger.data()!.iconUrl
       const blocks: Block[] = [
         {
           type: `section`,
@@ -83,6 +84,8 @@ export default function() {
         },
         blocks: blocks,
         channel: channel,
+        username: challengerName,
+        icon_url: iconUrl,
       }
       return app.client.chat.postMessage(msg).catch(err => {
         throw new Error(err)
