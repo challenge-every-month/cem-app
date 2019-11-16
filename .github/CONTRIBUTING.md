@@ -52,19 +52,19 @@ Issue内ではユーザビリティに基づく実装方針が議論されるこ
 ### Issue上で議論に加わる
 最もハードルが低く、広く求められている貢献方法です。
 
-[Issues一覧](/challenge-every-month/cem-app/issues)から興味のあるIssueを開き議論に参加してみてください。
+[Issues一覧](https://github.com/challenge-every-month/cem-app/issues)から興味のあるIssueを開き議論に参加してみてください。
 また、`help wanted`タグのついてるものは特に広く意見を求めているものなので参考にしてみてください。
 
 ### 不具合報告、機能要望、課題/タスク
 それぞれテンプレートがあるので是非活用してみてください。
-+ [不具合報告](/challenge-every-month/cem-app/issues/new?template=bag_report.md)
-+ [機能要望](/challenge-every-month/cem-app/issues/new?template=feature_request.md)
-+ [課題/タスク](/challenge-every-month/cem-app/issues/new?template=task.md)
++ [不具合報告](https://github.com/challenge-every-month/cem-app/issues/new?template=bag_report.md)
++ [機能要望](https://github.com/challenge-every-month/cem-app/issues/new?template=feature_request.md)
++ [課題/タスク](https://github.com/challenge-every-month/cem-app/issues/new?template=task.md)
 
-また上記に当てはまらないもしくはふさわしいものが不明な場合、[それ以外のIssue](/challenge-every-month/cem-app/issues/new)も大歓迎です。
+また上記に当てはまらないもしくはふさわしいものが不明な場合、[それ以外のIssue](https://github.com/challenge-every-month/cem-app/issues/new)も大歓迎です。
 
 また、アイデアとして挙がっているbacklogリストをIssueとして整理していただく方法もオススメです。
-backlogは[こちらのボード](/challenge-every-month/cem-app/projects/1)で管理されています。
+backlogは[こちらのボード](https://github.com/challenge-every-month/cem-app/projects/1)で管理されています。
 
 是非なにかあれば気軽にIssueとして挙げていただければと思います。必ずしも実装に結びつくものでなくても構いません。質問や相談も気兼ねなく書いてみてください。
 

@@ -1,10 +1,10 @@
 # CEM-App
 Challenge Every Monthコミュニティ用SlackApp。
 
-+ [ユーザーガイド](/challenge-every-month/cem-app/wiki/ユーザーガイド): Appの使用方法をまとめています。
-+ [Project:ROADMAP](/challenge-every-month/cem-app/projects/1): IssueやTodoを管理しています。
-+ [コントリビューションガイド](/challenge-every-month/cem-app/blob/master/.github/CONTRIBUTING.md): このプロジェクトへの貢献方法ガイドです。
-+ [開発ガイド](/challenge-every-month/cem-app/wiki/開発ガイド): 開発環境の構築や開発方法についてまとめています。
++ [ユーザーガイド](https://github.com/challenge-every-month/cem-app/wiki/ユーザーガイド): Appの使用方法をまとめています。
++ [Project:ROADMAP](https://github.com/challenge-every-month/cem-app/projects/1): IssueやTodoを管理しています。
++ [コントリビューションガイド](https://github.com/challenge-every-month/cem-app/blob/master/.github/CONTRIBUTING.md): このプロジェクトへの貢献方法ガイドです。
++ [開発ガイド](https://github.com/challenge-every-month/cem-app/wiki/開発ガイド): 開発環境の構築や開発方法についてまとめています。
 
 - - -
 
@@ -42,4 +42,4 @@ Challenge Every Monthコミュニティ用SlackApp。
 
 [Contributors](https://github.com/challenge-every-month/cem-app/graphs/contributors)
 
-開発に携わる以外にも貢献できる方法（e.g. 意見の交換、ドキュメントの更新）もありますので、お力添えいただける場合は是非[コントリビューションガイド](/challenge-every-month/cem-app/blob/master/.github/CONTRIBUTING.md)も参照してみてください。
+開発に携わる以外にも貢献できる方法（e.g. 意見の交換、ドキュメントの更新）もありますので、お力添えいただける場合は是非[コントリビューションガイド](https://github.com/challenge-every-month/cem-app/blob/master/.github/CONTRIBUTING.md)も参照してみてください。
