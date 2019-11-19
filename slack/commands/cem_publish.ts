@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore, FieldValue } from '../../initializers/firebase'
 import { Block, Message } from '../types/slack'
 const config = require(`config`)
 
@@ -32,7 +32,7 @@ export default function() {
         const msg: Message = {
           token: context.botToken,
           text: `プロジェクトが登録されていません`,
-          channel: channel,
+          channel,
           user: payload.user_id,
         }
         return app.client.chat.postEphemeral(msg)
@@ -82,8 +82,8 @@ export default function() {
           type: `mrkdwn`,
           text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
         },
-        blocks: blocks,
-        channel: channel,
+        blocks,
+        channel,
         username: challengerName,
         icon_url: iconUrl,
       }
@@ -95,7 +95,7 @@ export default function() {
       const msg: Message = {
         token: context.botToken,
         text: `Error: ${error}`,
-        channel: channel,
+        channel,
         user: payload.user_id,
       }
       return app.client.chat.postEphemeral(msg)

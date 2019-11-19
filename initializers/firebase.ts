@@ -5,7 +5,7 @@ if (process.env.NODE_ENV === `production`) {
     credential: admin.credential.applicationDefault(),
   })
 } else {
-  const serviceAccount = require(`../../serviceAccountKey.json`)
+  const serviceAccount = require(`../serviceAccountKey.json`)
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
   })

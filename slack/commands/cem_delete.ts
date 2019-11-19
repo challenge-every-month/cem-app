@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore } from '../../initializers/firebase'
 import { Option, Modal, Message } from '../types/slack'
 
 export default function() {

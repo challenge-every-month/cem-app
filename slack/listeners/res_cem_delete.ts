@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore } from '../../initializers/firebase'
 import { Message } from '../types/slack'
 
 export default function() {
@@ -28,7 +28,7 @@ export default function() {
       token: context.botToken,
       text: `新規プロジェクト[${projectTitle}]を削除しました`,
       channel: metadata,
-      user: user,
+      user,
     }
     await app.client.chat.postEphemeral(msg).catch(err => {
       throw new Error(err)

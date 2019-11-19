@@ -1,4 +1,4 @@
-import { app } from '../initializers/bolt'
+import { app } from '../../initializers/bolt'
 import { Message } from '../types/slack'
 const config = require(`config`)
 
@@ -29,7 +29,7 @@ export default function() {
     const msg: Message = {
       token: process.env.SLACK_BOT_TOKEN,
       text: `<!channel>\n${text}`,
-      channel: channel,
+      channel,
     }
     if (fromCron && postingMsg) {
       return app.client.chat.postMessage(msg).catch(err => {

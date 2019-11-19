@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore, FieldValue } from '../../initializers/firebase'
 
 const regex = /^review_(.*?)_(.*?)$/
 export default function() {
@@ -17,7 +17,7 @@ export default function() {
       .collection(`challenges`)
       .doc(challengeId)
     challenge.update({
-      status: status,
+      status,
       updatedAt: FieldValue.serverTimestamp(),
     })
     return 200

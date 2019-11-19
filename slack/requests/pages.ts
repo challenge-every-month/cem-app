@@ -1,4 +1,4 @@
-import { app } from '../initializers/bolt'
+import { app } from '../../initializers/bolt'
 
 export default function() {
   app.receiver.app.get(`/`, (req, res) => {

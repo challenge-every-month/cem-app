@@ -1,4 +1,4 @@
-import { app } from '../initializers/bolt'
+import { app } from '../../initializers/bolt'
 import { Message } from '../types/slack'
 const config = require(`config`)
 

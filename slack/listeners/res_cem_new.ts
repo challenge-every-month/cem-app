@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore, FieldValue } from '../../initializers/firebase'
 import { Message, Project, Challenge } from '../types/slack'
 
 export default function() {
@@ -53,7 +53,7 @@ export default function() {
       token: context.botToken,
       text: `新規プロジェクト[${projectTitle}]を[${year}-${month}]に登録しました`,
       channel: metadata,
-      user: user,
+      user,
     }
     await app.client.chat.postEphemeral(msg).catch(err => {
       throw new Error(err)

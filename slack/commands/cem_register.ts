@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore, FieldValue } from '../../initializers/firebase'
 import { Message, Challenger } from '../types/slack'
 
 export default function() {
@@ -20,7 +20,7 @@ export default function() {
           .doc(payload.user_id)
           .update({
             displayName: userName,
-            iconUrl: iconUrl,
+            iconUrl,
             updatedAt: FieldValue.serverTimestamp(),
           })
           .catch(err => {
@@ -39,7 +39,7 @@ export default function() {
       const challenger: Challenger = {
         slackName: payload.user_name,
         displayName: userName,
-        iconUrl: iconUrl,
+        iconUrl,
         updatedAt: FieldValue.serverTimestamp(),
         createdAt: FieldValue.serverTimestamp(),
       }

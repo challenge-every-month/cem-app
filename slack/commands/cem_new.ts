@@ -1,4 +1,4 @@
-import { app } from '../initializers/bolt'
+import { app } from '../../initializers/bolt'
 import { Option, Modal, Message } from '../types/slack'
 
 export default function() {

@@ -1,5 +1,5 @@
-import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
+import { app } from '../../initializers/bolt'
+import { firestore, FieldValue } from '../../initializers/firebase'
 import { Block, Message } from '../types/slack'
 const config = require(`config`)
 
@@ -30,8 +30,8 @@ export default function() {
         const msg: Message = {
           token: context.botToken,
           text: `振り返るプロジェクトが見つかりませんでした`,
-          channel: channel,
-          user: user,
+          channel,
+          user,
         }
         return app.client.chat.postEphemeral(msg)
       }
@@ -91,8 +91,8 @@ export default function() {
           type: `mrkdwn`,
           text: `${challengerName}さんが挑戦目標を振り返りました`,
         },
-        blocks: blocks,
-        channel: channel,
+        blocks,
+        channel,
         username: challengerName,
         icon_url: iconUrl,
       }
@@ -104,8 +104,8 @@ export default function() {
       const msg: Message = {
         token: context.botToken,
         text: `Error: ${error}`,
-        channel: channel,
-        user: user,
+        channel,
+        user,
       }
       return app.client.chat.postEphemeral(msg)
     }
