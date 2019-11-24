@@ -2,7 +2,7 @@ import { app } from '../../initializers/bolt'
 import { Option, Modal, Message } from '../types/slack'
 
 export default function() {
-  app.command(`/cem_new`, async ({ payload, ack, context }) => {
+  app.command(`/cem_new`, ({ payload, ack, context }) => {
     ack()
     const now = new Date()
     const thisYear = now.getFullYear()

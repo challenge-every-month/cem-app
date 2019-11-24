@@ -3,7 +3,7 @@ import { Message } from '../types/slack'
 const config = require(`config`)
 
 export default function() {
-  app.receiver.app.get(`/slack/deploying`, (req, res) => {
+  app.receiver.app.get(`/slack/deploying`, (_req, res) => {
     res.sendStatus(200)
     const channels = config.get(`Slack.Channels`)
     const msg: Message = {
@@ -16,7 +16,7 @@ export default function() {
       throw new Error(err)
     })
   })
-  app.receiver.app.get(`/slack/deployed`, (req, res) => {
+  app.receiver.app.get(`/slack/deployed`, (_req, res) => {
     res.sendStatus(200)
     const channels = config.get(`Slack.Channels`)
     const msg: Message = {
