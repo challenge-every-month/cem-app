@@ -1,14 +1,35 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
-    "module": "commonjs",
+    "target": "esnext",
+    "module": "esnext",
     "moduleResolution": "node",
+    "lib": [
+      "esnext",
+      "esnext.asynciterable",
+      "dom"
+    ],
+    "esModuleInterop": true,
+    "allowJs": true,
+    "sourceMap": true,
+    "strict": true,
+    "noEmit": true,
+    "baseUrl": ".",
+    "paths": {
+      "~/*": [
+        "./*"
+      ],
+      "@/*": [
+        "./*"
+      ]
+    },
+    "types": [
+      "@types/node",
+      "@nuxt/types"
+    ],
+    "outDir": "./dist",
     "removeComments": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2017",
     "noImplicitAny": false
   },
   "compileOnSave": true,
