@@ -4,20 +4,27 @@ module.exports = {
     node: true,
     es6: true,
     jest: true,
+    browser: true
   },
-  parser: '@typescript-eslint/parser',
+  // parser: '@typescript-eslint/parser',
   parserOptions: {
+    parser: '@typescript-eslint/parser',
     sourceType: 'module',
+    ecmaVersion: 2017
   },
-  plugins: [
-    '@typescript-eslint',
-    'prettier',
-  ],
   extends: [
+    '@nuxtjs/eslint-config-typescript',
     'standard',
     'prettier',
     'prettier/@typescript-eslint',
+    'prettier/vue',
+    'plugin:nuxt/recommended',
   ],
+  plugins: [
+    '@typescript-eslint',
+    'prettier'
+  ],
+  // add your custom rules here
   rules: {
     'prettier/prettier': ['error',
       {
@@ -49,6 +56,7 @@ module.exports = {
     'no-unused-vars': 'off',
     '@typescript-eslint/no-unused-vars': 'error',
     '@typescript-eslint/no-use-before-define': ['error', { functions: false, classes: true, variables: true }],
-    'camelcase': 'off'
-  },
+    'camelcase': 'off',
+    'nuxt/no-cjs-in-config': 'off'
+  }
 }
