@@ -109,15 +109,3 @@ lefthook-local.yml
 # env & keys
 /.env
 /serviceAccountKey.json
-
-# IDE / Editor
-.idea
-
-# Service worker
-sw.*
-
-# Mac OSX
-.DS_Store
-
-# Vim swap files
-*.swp
