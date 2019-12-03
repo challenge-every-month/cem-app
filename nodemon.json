@@ -1,8 +1,7 @@
 {
   "watch": [
-    "slack",
-    "server"
+    "src"
   ],
   "ext": "ts",
-  "exec": "nuxt-ts"
+  "exec": "node --inspect -r ts-node/register ./src/index.ts"
 }
