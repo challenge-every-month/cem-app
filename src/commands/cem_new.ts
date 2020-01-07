@@ -155,7 +155,7 @@ export default function() {
               block_id: `description`,
               label: {
                 type: `plain_text`,
-                text: `説明（optional)`,
+                text: `説明`,
                 emoji: true,
               },
               optional: true,
