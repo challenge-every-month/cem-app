@@ -12,6 +12,9 @@ export default function() {
     const projectTitle = payload.projectTitle.projectTitle.value
     const year = payload.year.year.selected_option.value
     const month = payload.month.month.selected_option.value
+    const description = payload.description
+      ? payload.description.description.value || ``
+      : ``
 
     const challengerRef = firestore.collection(`challengers`).doc(user)
     const projectsRef = firestore.collection(`projects`)
@@ -24,7 +27,7 @@ export default function() {
       month: Number(month),
       title: projectTitle,
       status: `draft`,
-      description: payload.description.description.value || ``,
+      description: description,
       updatedAt: timestamp,
       createdAt: timestamp,
     }
