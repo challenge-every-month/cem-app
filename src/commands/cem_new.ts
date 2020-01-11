@@ -145,6 +145,7 @@ app.command(`/cem_new`, async ({ payload, ack, context }) => {
               action_id: `challenges`,
               placeholder: {
                 type: `plain_text`,
+                emoji: true,
                 text: `毎週ブログを書く\n積ん読を1冊解消する`,
               },
             },
@@ -154,7 +155,7 @@ app.command(`/cem_new`, async ({ payload, ack, context }) => {
             block_id: `description`,
             label: {
               type: `plain_text`,
-              text: `説明（optional)`,
+              text: `説明`,
               emoji: true,
             },
             optional: true,
