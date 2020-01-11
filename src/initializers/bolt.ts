@@ -1,18 +1,16 @@
-const { App, LogLevel, ExpressReceiver } = require(`@slack/bolt`)
+import { App, LogLevel, ExpressReceiver } from '@slack/bolt'
 
 // Initialize your own ExpressReceiver
-const receiver = new ExpressReceiver({
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+export const expressReceiver = new ExpressReceiver({
+  signingSecret: process.env.SLACK_SIGNING_SECRET as string,
   endpoints: `/slack/events`,
+  // endpoints: `/slack/events`,
 })
 
 // Initializes your app with your bot token and signing secret
-const config = {
+export const app = new App({
   token: process.env.SLACK_BOT_TOKEN,
-  signingSecret: process.env.SLACK_SIGNING_SECRET,
+  receiver: expressReceiver,
   logLevel:
     process.env.NODE_ENV === `production` ? LogLevel.INFO : LogLevel.DEBUG,
-  receiver,
-}
-
-export const app = new App(config)
+})
