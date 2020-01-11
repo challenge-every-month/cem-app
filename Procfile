@@ -1,2 +1,2 @@
 Bolt: yarn watch
-Serv: autossh -M -0 -R ${SERVEO}:80:localhost:3000 serveo.net
+Serv: ngrok http -log=stdout 3000
