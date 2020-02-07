@@ -25,15 +25,7 @@ app.command(`/cem_register`, async ({ payload, ack, context }) => {
         .catch(err => {
           throw new Error(err)
         })
-      const msg: Message = {
-        token: context.botToken,
-        text: `表示名を[${userName}]に変更しました`,
-        channel: payload.channel_id,
-        user: payload.user_id,
-      }
-      return app.client.chat.postEphemeral(msg as any)
     }
-
     // firestoreにユーザー作成
     const challenger: Challenger = {
       slackName: payload.user_name,
@@ -48,6 +40,21 @@ app.command(`/cem_register`, async ({ payload, ack, context }) => {
       .catch(err => {
         throw new Error(err)
       })
+
+    // exersiseにもデータ作成
+    const exercisesRef = firestore.collection(`exercises`)
+    const exercise = {
+      dayStreaks: 0,
+      updatedAt: FieldValue.serverTimestamp(),
+      createdAt: FieldValue.serverTimestamp(),
+    }
+    await exercisesRef
+      .doc(payload.user_id)
+      .set(exercise, { merge: true })
+      .catch(err => {
+        throw new Error(err)
+      })
+
     // 成功をSlack通知
     const msg: Message = {
       token: context.botToken,
