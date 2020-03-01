@@ -8,6 +8,7 @@ import { app, expressReceiver } from './initializers/bolt'
 app.error(console.log)
 
 require(`./commands/echo`)
+require(`./commands/cem_help`)
 require(`./commands/cem_register`)
 require(`./commands/cem_new`)
 require(`./commands/cem_publish`)
