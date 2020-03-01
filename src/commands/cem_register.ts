@@ -25,6 +25,13 @@ app.command(`/cem_register`, async ({ payload, ack, context }) => {
         .catch(err => {
           throw new Error(err)
         })
+      const msg: Message = {
+        token: context.botToken,
+        text: `表示名を[${userName}]に変更しました`,
+        channel: payload.channel_id,
+        user: payload.user_id,
+      }
+      return app.client.chat.postEphemeral(msg as any)
     }
     // firestoreにユーザー作成
     const challenger: Challenger = {
