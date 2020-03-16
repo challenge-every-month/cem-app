@@ -2,7 +2,7 @@ import { app } from '../initializers/bolt'
 import { Message } from '../types/slack'
 
 const helpText = `
-こんにちは、CEMたろうです。\
+こんにちは、CEMたろうです。\n
 このSlackワークスペースの説明をします。\n
 \n
 **ルール**\n
@@ -15,7 +15,7 @@ const helpText = `
 作業のログや行きづまってること、ポエム、シェア情報など好きに書いてOKな自分中心のチャンネルです。\n
 雑に言えばこのSlack用のTwitter的な場所だと思ってください。\n
 \n
-使用方法は「{名前}_times」という規則に従ってチャンネルを作成するだけです。\n
+使用方法は「times_{名前}」という規則に従ってチャンネルを作成するだけです。\n
 良くわからない場合はまずはメンバーの分報チャンネルに参加してみると良いでしょう。\n
 \n
 **特殊なチャンネル**\n
@@ -25,7 +25,7 @@ const helpText = `
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#03_結果>: 挑戦結果の報告専用チャンネル\n
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#10_運動えらい>: 運動したことを報告し、みんなで褒め讃えあうチャンネル\n
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#20_英語only>: 英語学習のため英語onlyなチャンネル\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#30_運動えらい>: 読書したことを報告し、みんなで褒め讃えあうチャンネル\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#30_読書えらい>: 読書したことを報告し、みんなで褒め讃えあうチャンネル\n
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#shout>: 愚痴や怒りなどの吐き捨て場、一定期間で発言が削除されるチャンネル\n
 \n
 ** CEMたろうについて **\n
