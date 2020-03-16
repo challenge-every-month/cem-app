@@ -2,12 +2,15 @@
 title データ設計
 class Challenger
 note left:挑戦者
+class Month
+note left: 月間の目標
 class Project
 note left: challengeを複数纏めたもの。\n月ごとに複数設定できる。\nジャンル分けに使用する想定。
 class Challenge
 note left: 挑戦や目標。\n1行程度を想定しており、projectに属する
 
-Challenger <--> "0..*"Project
+Challenger <-->"0..1" Month
+Month <-->"1..*"Project
 Project <--> "1..*" Challenge
 
 @enduml
