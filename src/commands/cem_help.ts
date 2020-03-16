@@ -7,8 +7,8 @@ const helpText = `
 \n
 **ルール**\n
 1. 月初にその月の挑戦目標を宣言します\n
-2. 月の途中に進捗状況を報告、必要なら挑戦目標の修正を行ないます\n
-3. 月末に挑戦目標の結果を報します\n
+2. 月の途中に進捗状況を報告、必要なら挑戦目標の修正をおこないます\n
+3. 月末に挑戦目標の結果を報告します\n
 \n
 **分報チャンネル**\n
 参加は自由に「分報」のチャンネルを作ることができます（必須ではありません）。\n
@@ -20,13 +20,13 @@ const helpText = `
 \n
 **特殊なチャンネル**\n
 このCEM Slackではカジュアルにチャンネルが作られますが、いくつかのチャンネルはルールが存在します。\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#01_目標>: 挑戦目標の宣言専用\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#02_進捗報告>: 挑戦の進捗の報告専用\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#03_結果>: 挑戦結果の報告専用\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#01_目標>: 挑戦目標の宣言専用チャンネル\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#02_進捗報告>: 挑戦進捗の報告専用チャンネル\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#03_結果>: 挑戦結果の報告専用チャンネル\n
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#10_運動えらい>: 運動したことを報告し、みんなで褒め讃えあうチャンネル\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#20_英語only>: 英語学習のため英語での発言縛りなチャンネル\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#20_英語only>: 英語学習のため英語onlyなチャンネル\n
 - <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#30_運動えらい>: 読書したことを報告し、みんなで褒め讃えあうチャンネル\n
-- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#shout>: 愚痴や怒りなどの吐き捨て場、一定期間で発言が削除されます\n
+- <https://app.slack.com/client/TFP53MPGV/CGK3VESBC|#shout>: 愚痴や怒りなどの吐き捨て場、一定期間で発言が削除されるチャンネル\n
 \n
 ** CEMたろうについて **\n
 運営補助として独自のSlackAppである「CEMたろう」が動いています。\n
