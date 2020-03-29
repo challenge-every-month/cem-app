@@ -5,8 +5,22 @@ import { Message, Project, Challenge } from '../types/slack'
 app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   ack()
 
-  // const index = 0
   const payload = (view.state as any).values
+
+  // key情報を無理やり取得する
+  for (let [key, value] of Object.entries(payload)) {
+    console.log(`${key}`)
+    if (key.includes(`projectTitle`)) {
+      console.log(`projectTitle`)
+      if (value instanceof Object) {
+        const value1: object = value
+        let a = Object.values(value1)
+        let b = Object.values(a[0])
+        console.log({ projectTitle: b[1] })
+      }
+    }
+  }
+
   const user = body.user.id
   const metadata = body.view.private_metadata
   const projectTitle = payload.projectTitle0.projectTitle0.value
@@ -48,6 +62,9 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   for (const challengeName of payload.challenges0.challenges0.value.split(
     /\n/
   )) {
+    if (challengeName === ``) {
+      continue
+    }
     const challenge: Challenge = {
       challenger: challengerRef,
       year: Number(payload.year0.year0.selected_option.value),
