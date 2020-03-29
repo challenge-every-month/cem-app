@@ -1,6 +1,31 @@
 import { app } from '../initializers/bolt'
-import { firestore, FieldValue } from '../initializers/firebase'
-import { Message, Project, Challenge } from '../types/slack'
+import { FieldValue, firestore } from '../initializers/firebase'
+import { Challenge, Message, Project } from '../types/slack'
+
+class Key {
+  // eslint-disable-next-line no-useless-constructor
+  constructor(public key: string) {}
+
+  public isProjectTitle() {
+    return this.key.includes(`projectTitle`)
+  }
+
+  public isYear() {
+    return this.key.includes(`year`)
+  }
+
+  public isMonth() {
+    return this.key.includes(`month`)
+  }
+
+  public isDescription() {
+    return this.key.includes(`description`)
+  }
+
+  public isChallenge() {
+    return this.key.includes(`challenge`)
+  }
+}
 
 app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   ack()
@@ -8,9 +33,10 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const payload = (view.state as any).values
 
   // key情報を無理やり取得する
-  for (const [key, value] of Object.entries(payload)) {
+  for (const [keyTmp, value] of Object.entries(payload)) {
+    const key = new Key(keyTmp)
     console.log(`${key}`)
-    if (key.includes(`projectTitle`)) {
+    if (key.isProjectTitle()) {
       if (value instanceof Object) {
         const a = Object.values(value)
         const b = a[0].value
@@ -18,7 +44,7 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
       }
     }
 
-    if (key.includes(`year`)) {
+    if (key.isYear()) {
       if (value instanceof Object) {
         const a = Object.values(value)
         const b = a[0].selected_option.value
@@ -26,7 +52,7 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
       }
     }
 
-    if (key.includes(`month`)) {
+    if (key.isMonth()) {
       if (value instanceof Object) {
         const a = Object.values(value)
         const b = a[0].selected_option.value
@@ -34,7 +60,7 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
       }
     }
 
-    if (key.includes(`description`)) {
+    if (key.isDescription()) {
       if (value instanceof Object) {
         const a = Object.values(value)
         const b = a[0].value
@@ -43,7 +69,7 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
       }
     }
 
-    if (key.includes(`challenge`)) {
+    if (key.isChallenge()) {
       console.log(`ちゃれんじ`)
       if (value instanceof Object) {
         const a = Object.values(value)
@@ -54,7 +80,6 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   }
 
   const user = body.user.id
-  const metadata = body.view.private_metadata
   const projectTitle = payload.projectTitle0.projectTitle0.value
   const year = payload.year0.year0.selected_option.value
   const month = payload.month0.month0.selected_option.value
@@ -126,7 +151,7 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const msg: Message = {
     token: context.botToken,
     text: `新規プロジェクト[${projectTitle}]を[${year}-${month}]に登録しました`,
-    channel: metadata,
+    channel: body.view.private_metadata,
     user: user,
   }
   await app.client.chat.postEphemeral(msg as any).catch(err => {
