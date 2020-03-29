@@ -5,14 +5,15 @@ import { Message, Project, Challenge } from '../types/slack'
 app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   ack()
 
+  // const index = 0
   const payload = (view.state as any).values
   const user = body.user.id
   const metadata = body.view.private_metadata
-  const projectTitle = payload.projectTitle.projectTitle.value
-  const year = payload.year.year.selected_option.value
-  const month = payload.month.month.selected_option.value
-  const description: string = payload.description
-    ? payload.description.description.value || ``
+  const projectTitle = payload.projectTitle0.projectTitle0.value
+  const year = payload.year0.year0.selected_option.value
+  const month = payload.month0.month0.selected_option.value
+  const description: string = payload.description0
+    ? payload.description0.description0.value || ``
     : ``
 
   const challengerRef = firestore.collection(`challengers`).doc(user)
@@ -33,12 +34,23 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const projectRef = await projectsRef.add(project).catch(err => {
     throw new Error(err)
   })
-  // firestoreに挑戦を行ごとにパーズして保存
+
+  // firestoreからプロジェクトとサブコレクションのチャレンジを削除
   const batch = firestore.batch()
-  for (const challengeName of payload.challenges.challenges.value.split(/\n/)) {
+  const projectIdRef = projectsRef.doc(`projectId`)
+  const challengesRef = await projectIdRef.collection(`challenges`).get()
+  challengesRef.docs.forEach(challenge => {
+    batch.delete(challenge.ref)
+  })
+  batch.delete(projectIdRef)
+
+  // firestoreに挑戦を行ごとにパーズして保存
+  for (const challengeName of payload.challenges0.challenges0.value.split(
+    /\n/
+  )) {
     const challenge: Challenge = {
       challenger: challengerRef,
-      year: Number(payload.year.year.selected_option.value),
+      year: Number(payload.year0.year0.selected_option.value),
       month: Number(month),
       name: challengeName,
       status: `draft`,
