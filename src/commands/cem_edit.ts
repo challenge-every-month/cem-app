@@ -39,18 +39,13 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     }
   })
 
-  const challenges: any[] = []
-  projects.docs.forEach(project => {
-    challenges.push(project.id)
-  })
-
+  let index = 0
   const blocks: any[] = []
-  // TODO: うごかないが、こういうことがしたい
-  projects.docs.forEach(async (project, index) => {
+  // async/awaitを使いたいので、for-ofを使用している
+  for (const project of projects.docs) {
     const challlengeRef = projectsRef.doc(project.id).collection(`challenges`)
     const challenges = await challlengeRef.get()
 
-    console.log(challenges.docs.length)
     const projData = project.data()
     // console.log(project.id)
     blocks.push({
@@ -143,6 +138,11 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
     })
 
+    let challengeText: string = ``
+    challenges.docs.forEach(challenge => {
+      const challengeData = challenge.data()
+      challengeText += challengeData.name + `\n`
+    })
     blocks.push({
       type: `input`,
       block_id: `challenges${index}`,
@@ -159,7 +159,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         type: `plain_text_input`,
         multiline: true,
         action_id: `challenges${index}`,
-        // TODO ここのつめかた
+        initial_value: challengeText,
         placeholder: {
           type: `plain_text`,
           emoji: true,
@@ -192,7 +192,9 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         },
       },
     })
-  })
+
+    index += 1
+  }
 
   try {
     const modal: Modal = {
