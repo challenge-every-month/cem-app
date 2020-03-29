@@ -2,6 +2,7 @@
 title projectの状態
 (*)  --> [/cem_new]"仮登録"
 "仮登録" --> [/cem_delete](*)
+"公開" --> [/cem_edit]"公開"
 "仮登録" --> [/cem_publish]"公開"
 "公開" --> [/cem_review]"公開終了"
 -->(*)
