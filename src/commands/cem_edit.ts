@@ -39,12 +39,10 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     }
   })
 
-  // const blocks2: ModalBlock[] =
-  const blocks2: any[] = []
+  const blocks: any[] = []
   projects.docs.forEach((project, index) => {
     const projData = project.data()
-    console.log(projData.title)
-    blocks2.push({
+    blocks.push({
       type: `input`,
       block_id: `projectTitle${index}`,
       label: {
@@ -63,7 +61,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
     })
 
-    blocks2.push({
+    blocks.push({
       type: `input`,
       block_id: `year${index}`,
       label: {
@@ -99,14 +97,14 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         initial_option: {
           text: {
             type: `plain_text`,
-            text: `${thisYear}`,
+            text: `${projData.year}`,
             emoji: true,
           },
-          value: `${thisYear}`,
+          value: `${projData.year}`,
         },
       },
     })
-    blocks2.push({
+    blocks.push({
       type: `input`,
       block_id: `month${index}`,
       label: {
@@ -126,15 +124,15 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         initial_option: {
           text: {
             type: `plain_text`,
-            text: `${thisMonth}`,
+            text: `${projData.month}`,
             emoji: true,
           },
-          value: `${thisMonth}`,
+          value: `${projData.month}`,
         },
       },
     })
 
-    blocks2.push({
+    blocks.push({
       type: `input`,
       block_id: `challenges${index}`,
       label: {
@@ -150,6 +148,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         type: `plain_text_input`,
         multiline: true,
         action_id: `challenges${index}`,
+        // TODO ここのつめかた
         placeholder: {
           type: `plain_text`,
           emoji: true,
@@ -158,7 +157,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
     })
 
-    blocks2.push({
+    blocks.push({
       type: `input`,
       block_id: `description${index}`,
       label: {
@@ -174,6 +173,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       element: {
         type: `plain_text_input`,
         multiline: true,
+        initial_value: projData.description,
         action_id: `description${index}`,
         placeholder: {
           type: `plain_text`,
@@ -182,8 +182,6 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
     })
   })
-
-  // const blocks: ModalBlock[] = [, , , ,]
 
   try {
     const modal: Modal = {
@@ -208,7 +206,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
           text: `破棄`,
           emoji: true,
         },
-        blocks: blocks2,
+        blocks: blocks,
       },
     }
     return app.client.views.open(modal as any)
