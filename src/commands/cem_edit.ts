@@ -1,5 +1,5 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message, ModalBlock } from '../types/slack'
+import { Option, Modal, Message } from '../types/slack'
 import { firestore } from '../initializers/firebase'
 
 app.command(`/cem_edit`, async ({ payload, ack, context }) => {
@@ -40,7 +40,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
   })
 
   // const blocks2: ModalBlock[] =
-  const blocks2: ModalBlock[] = []
+  const blocks2: any[] = []
   projects.docs.forEach((project, index) => {
     const projData = project.data()
     console.log(projData.title)
@@ -55,6 +55,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       element: {
         type: `plain_text_input`,
         action_id: `projectTitle${index}`,
+        initial_value: projData.title,
         placeholder: {
           type: `plain_text`,
           text: `${thisYear}年${thisMonth}月の挑戦`,
