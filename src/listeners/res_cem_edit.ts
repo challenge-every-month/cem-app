@@ -8,15 +8,47 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const payload = (view.state as any).values
 
   // key情報を無理やり取得する
-  for (let [key, value] of Object.entries(payload)) {
+  for (const [key, value] of Object.entries(payload)) {
     console.log(`${key}`)
     if (key.includes(`projectTitle`)) {
-      console.log(`projectTitle`)
       if (value instanceof Object) {
-        const value1: object = value
-        let a = Object.values(value1)
-        let b = Object.values(a[0])
-        console.log({ projectTitle: b[1] })
+        const a = Object.values(value)
+        const b = a[0].value
+        console.log(b)
+      }
+    }
+
+    if (key.includes(`year`)) {
+      if (value instanceof Object) {
+        const a = Object.values(value)
+        const b = a[0].selected_option.value
+        console.log(b)
+      }
+    }
+
+    if (key.includes(`month`)) {
+      if (value instanceof Object) {
+        const a = Object.values(value)
+        const b = a[0].selected_option.value
+        console.log(b)
+      }
+    }
+
+    if (key.includes(`description`)) {
+      if (value instanceof Object) {
+        const a = Object.values(value)
+        const b = a[0].value
+        // TODO: undefinedだったらブランク
+        console.log(b)
+      }
+    }
+
+    if (key.includes(`challenge`)) {
+      console.log(`ちゃれんじ`)
+      if (value instanceof Object) {
+        const a = Object.values(value)
+        const b = a[0].value
+        console.log(b)
       }
     }
   }
@@ -33,6 +65,28 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const challengerRef = firestore.collection(`challengers`).doc(user)
   const projectsRef = firestore.collection(`projects`)
   const timestamp = await FieldValue.serverTimestamp()
+
+  // firestoreからプロジェクトとサブコレクションのチャレンジを削除
+  const batch = firestore.batch()
+  // HACK:呼び出し元で二重発行している
+  const projectDeleteQuery = firestore
+    .collection(`projects`)
+    .where(`challenger`, `==`, challengerRef)
+    .where(`status`, `==`, `draft`)
+
+  const projects = await projectDeleteQuery.get().catch(err => {
+    throw new Error(err)
+  })
+
+  for (const project of projects.docs) {
+    const projectDel = firestore.collection(`projects`).doc(project.id)
+    const challengesRef = await projectDel.collection(`challenges`).get()
+    challengesRef.docs.forEach(challenge => {
+      batch.delete(challenge.ref)
+    })
+    batch.delete(projectDel)
+  }
+
   // firestoreにプロジェクト作成
 
   const project: Project = {
@@ -48,15 +102,6 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   const projectRef = await projectsRef.add(project).catch(err => {
     throw new Error(err)
   })
-
-  // firestoreからプロジェクトとサブコレクションのチャレンジを削除
-  const batch = firestore.batch()
-  const projectIdRef = projectsRef.doc(`projectId`)
-  const challengesRef = await projectIdRef.collection(`challenges`).get()
-  challengesRef.docs.forEach(challenge => {
-    batch.delete(challenge.ref)
-  })
-  batch.delete(projectIdRef)
 
   // firestoreに挑戦を行ごとにパーズして保存
   for (const challengeName of payload.challenges0.challenges0.value.split(
