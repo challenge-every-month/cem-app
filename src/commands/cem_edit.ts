@@ -39,9 +39,20 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     }
   })
 
+  const challenges: any[] = []
+  projects.docs.forEach(project => {
+    challenges.push(project.id)
+  })
+
   const blocks: any[] = []
-  projects.docs.forEach((project, index) => {
+  // TODO: うごかないが、こういうことがしたい
+  projects.docs.forEach(async (project, index) => {
+    const challlengeRef = projectsRef.doc(project.id).collection(`challenges`)
+    const challenges = await challlengeRef.get()
+
+    console.log(challenges.docs.length)
     const projData = project.data()
+    // console.log(project.id)
     blocks.push({
       type: `input`,
       block_id: `projectTitle${index}`,
