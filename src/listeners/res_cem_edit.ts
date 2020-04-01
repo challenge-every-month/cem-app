@@ -27,6 +27,42 @@ class ModalDto {
     }
     return ``
   }
+
+  public static toDescription(value) {
+    if (value instanceof Object) {
+      const a: Object[] = Object.values(value)
+      const object = Object(a[0])
+      // eslint-disable-next-line no-prototype-builtins
+      if (object.hasOwnProperty(`value`)) {
+        return object.value
+      }
+    }
+    return ``
+  }
+
+  static toChallengeList(value: unknown) {
+    if (value instanceof Object) {
+      const a = Object.values(value)
+      return a[0].value
+    }
+    return ``
+  }
+
+  static toYear(value: unknown) {
+    if (value instanceof Object) {
+      const a = Object.values(value)
+      return Number(a[0].selected_option.value)
+    }
+    return 0
+  }
+
+  static toMonth(value: unknown) {
+    if (value instanceof Object) {
+      const a = Object.values(value)
+      return Number(a[0].selected_option.value)
+    }
+    return 0
+  }
 }
 
 class Key {
@@ -103,35 +139,19 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
     }
 
     if (key.isYear()) {
-      if (value instanceof Object) {
-        const a = Object.values(value)
-        year = Number(a[0].selected_option.value)
-      }
+      year = ModalDto.toYear(value)
     }
 
     if (key.isMonth()) {
-      if (value instanceof Object) {
-        const a = Object.values(value)
-        month = Number(a[0].selected_option.value)
-      }
+      month = ModalDto.toMonth(value)
     }
 
     if (key.isDescription()) {
-      if (value instanceof Object) {
-        const a: Object[] = Object.values(value)
-        const object = Object(a[0])
-        // eslint-disable-next-line no-prototype-builtins
-        if (object.hasOwnProperty(`value`)) {
-          description = object.value
-        }
-      }
+      description = ModalDto.toDescription(value)
     }
 
     if (key.isChallenge()) {
-      if (value instanceof Object) {
-        const a = Object.values(value)
-        challengeList = a[0].value
-      }
+      challengeList = ModalDto.toChallengeList(value)
     }
 
     if (
