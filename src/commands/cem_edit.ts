@@ -206,7 +206,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,
-          text: `新規プロジェクト追加`,
+          text: `プロジェクト修正`,
           emoji: true,
         },
         submit: {
