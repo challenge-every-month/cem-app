@@ -111,17 +111,7 @@ async function addDeleteBatch(challengerRef, batch) {
   }
 }
 
-app.view(`cem_edit`, async ({ ack, body, view, context }) => {
-  ack()
-
-  const user = body.user.id
-  const challengerRef = firestore.collection(`challengers`).doc(user)
-  const projectsRef = firestore.collection(`projects`)
-  const timestamp = await FieldValue.serverTimestamp()
-  // firestoreからプロジェクトとサブコレクションのチャレンジを削除
-  const batch = firestore.batch()
-  await addDeleteBatch(challengerRef, batch)
-
+async function createModalDtoList(view) {
   const payload = (view.state as any).values
 
   const modalDtoList: ModalDto[] = []
@@ -173,41 +163,92 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
       challengeList = ``
     }
   }
+  return modalDtoList
+}
 
-  // firestoreにプロジェクト作成
+async function addProjectBatch(
+  challengerRef,
+  modalDto: ModalDto,
+  timestamp,
+  projectsRef
+) {
+  const project: Project = {
+    challenger: challengerRef,
+    year: modalDto.year,
+    month: modalDto.month,
+    title: modalDto.projectTitle,
+    status: `draft`,
+    description: modalDto.description,
+    updatedAt: timestamp,
+    createdAt: timestamp,
+  }
+  const projectRef = await projectsRef.add(project).catch(err => {
+    throw new Error(err)
+  })
+  return projectRef
+}
 
-  for (const modalDto of modalDtoList) {
-    const project: Project = {
+async function addChallengeBatch(
+  modalDto: ModalDto,
+  challengerRef,
+  timestamp,
+  batch,
+  projectRef
+) {
+  // firestoreに挑戦を行ごとにパーズして保存
+  for (const challengeName of modalDto.challengeArea.split(/\n/)) {
+    if (challengeName === ``) {
+      continue
+    }
+    const challenge: Challenge = {
       challenger: challengerRef,
       year: modalDto.year,
       month: modalDto.month,
-      title: modalDto.projectTitle,
+      name: challengeName,
       status: `draft`,
-      description: modalDto.description,
       updatedAt: timestamp,
       createdAt: timestamp,
     }
-    const projectRef = await projectsRef.add(project).catch(err => {
-      throw new Error(err)
-    })
-
-    // firestoreに挑戦を行ごとにパーズして保存
-    for (const challengeName of modalDto.challengeArea.split(/\n/)) {
-      if (challengeName === ``) {
-        continue
-      }
-      const challenge: Challenge = {
-        challenger: challengerRef,
-        year: modalDto.year,
-        month: modalDto.month,
-        name: challengeName,
-        status: `draft`,
-        updatedAt: timestamp,
-        createdAt: timestamp,
-      }
-      batch.set(projectRef.collection(`challenges`).doc(), challenge)
-    }
+    batch.set(projectRef.collection(`challenges`).doc(), challenge)
   }
+}
+
+async function addBatch(
+  modalDtoList: ModalDto[],
+  challengerRef,
+  timestamp,
+  projectsRef,
+  batch
+) {
+  for (const modalDto of modalDtoList) {
+    const projectRef = await addProjectBatch(
+      challengerRef,
+      modalDto,
+      timestamp,
+      projectsRef
+    )
+    await addChallengeBatch(
+      modalDto,
+      challengerRef,
+      timestamp,
+      batch,
+      projectRef
+    )
+  }
+}
+
+app.view(`cem_edit`, async ({ ack, body, view, context }) => {
+  ack()
+
+  const user = body.user.id
+  const challengerRef = firestore.collection(`challengers`).doc(user)
+  const projectsRef = firestore.collection(`projects`)
+  const timestamp = await FieldValue.serverTimestamp()
+  const batch = firestore.batch()
+
+  await addDeleteBatch(challengerRef, batch)
+  const modalDtoList = await createModalDtoList(view)
+  await addBatch(modalDtoList, challengerRef, timestamp, projectsRef, batch)
 
   await batch.commit()
   // 成功をSlack通知
