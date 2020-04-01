@@ -13,6 +13,13 @@ class ModalDto {
     public description: string
   ) {}
 
+  /**
+   * プロジェクトのタイトルを取得する。
+   * パス名が動的変更されるので、このように取得する。
+   *
+   * 元パス： payload.projectTitle{index}.projectTitle{index}.value
+   * @param obj
+   */
   public static toProjectTitle(obj: Object | unknown): string {
     if (obj instanceof Object) {
       const a = Object.values(obj)
@@ -88,7 +95,6 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
   let projectTitle = ``
   let description = ``
   let challengeList = ``
-  console.log(payload)
   // key情報を無理やり取得する
   for (const [keys, value] of Object.entries(payload)) {
     const key = new Key(keys)
@@ -112,9 +118,12 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
 
     if (key.isDescription()) {
       if (value instanceof Object) {
-        const a = Object.values(value)
-        description = a[0].value
-        // TODO: undefinedだったらブランク
+        const a: Object[] = Object.values(value)
+        const object = Object(a[0])
+        // eslint-disable-next-line no-prototype-builtins
+        if (object.hasOwnProperty(`value`)) {
+          description = object.value
+        }
       }
     }
 
