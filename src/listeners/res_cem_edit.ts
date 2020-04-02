@@ -119,7 +119,7 @@ async function createModalDtoList(view) {
   let year = 0
   let month = 0
   let projectTitle = ``
-  let description = ``
+  let description = `-` // ブランクだと、最後の更新が入らなくなる
   let challengeList = ``
   // key情報を無理やり取得する
   for (const [keys, value] of Object.entries(payload)) {
@@ -148,7 +148,7 @@ async function createModalDtoList(view) {
       projectTitle !== `` &&
       year !== 0 &&
       month !== 0 &&
-      description !== `` &&
+      description !== `-` &&
       challengeList !== ``
     ) {
       modalDtoList.push(
@@ -159,7 +159,7 @@ async function createModalDtoList(view) {
       projectTitle = ``
       year = 0
       month = 0
-      description = ``
+      description = `-`
       challengeList = ``
     }
   }
