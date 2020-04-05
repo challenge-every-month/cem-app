@@ -1,5 +1,6 @@
 import { app } from '../initializers/bolt'
 import { Message } from '../types/slack'
+import { Command } from '../types/CodeConstant'
 
 const helpText = `
 こんにちは、CEMたろうです。\n
@@ -51,7 +52,7 @@ const helpText = `
 - <https://github.com/challenge-every-month/cem-app/wiki/開発ガイド|CEMたろう開発ガイド>\n
 `
 
-app.command(`/cem_help`, async ({ payload, ack, context }) => {
+app.command(Command.CemHelp, async ({ payload, ack, context }) => {
   ack()
   try {
     const msg: Message = {

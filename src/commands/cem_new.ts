@@ -1,8 +1,8 @@
 import { app } from '../initializers/bolt'
 import { Option, Modal, Message } from '../types/slack'
-import { CallbackId } from '../types/CodeConstant'
+import { CallbackId, Command } from '../types/CodeConstant'
 
-app.command(`/cem_new`, async ({ payload, ack, context }) => {
+app.command(Command.CemNew, async ({ payload, ack, context }) => {
   ack()
   const now = new Date()
   const thisYear = now.getFullYear()

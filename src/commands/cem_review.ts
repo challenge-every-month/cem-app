@@ -1,9 +1,9 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
 import { Message, Block } from '../types/slack'
-import { CallbackId } from '../types/CodeConstant'
+import { CallbackId, Command } from '../types/CodeConstant'
 
-app.command(`/cem_review`, async ({ payload, ack, context }) => {
+app.command(Command.CemReview, async ({ payload, ack, context }) => {
   ack()
 
   const challengerRef = firestore.collection(`challengers`).doc(payload.user_id)
