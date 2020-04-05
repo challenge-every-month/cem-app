@@ -1,9 +1,11 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
 import { Block, Message } from '../types/slack'
+// @ts-ignore
 import * as config from 'config'
+import { Command } from '../types/CodeConstant'
 
-app.command(`/cem_publish`, async ({ payload, ack, context }) => {
+app.command(Command.CemPublish, async ({ payload, ack, context }) => {
   ack()
 
   const now = new Date()
