@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
 import { Option, Modal, Message } from '../types/slack'
+import { CallbackId } from '../types/CodeConstant'
 
 app.command(`/cem_delete`, async ({ payload, ack, context }) => {
   ack()
@@ -41,7 +42,7 @@ app.command(`/cem_delete`, async ({ payload, ack, context }) => {
       trigger_id: payload.trigger_id,
       view: {
         type: `modal`,
-        callback_id: `cem_delete`,
+        callback_id: CallbackId.CemDelete,
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,

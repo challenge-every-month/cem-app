@@ -1,8 +1,9 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
 import { Message } from '../types/slack'
+import { CallbackId } from '../types/CodeConstant'
 
-app.view(`cem_delete`, async ({ ack, body, view, context }) => {
+app.view(CallbackId.CemDelete, async ({ ack, body, view, context }) => {
   ack()
 
   const payload = (view.state as any).values

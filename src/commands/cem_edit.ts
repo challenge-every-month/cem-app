@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { Option, Modal, Message } from '../types/slack'
 import { firestore } from '../initializers/firebase'
+import { CallbackId } from '../types/CodeConstant'
 
 app.command(`/cem_edit`, async ({ payload, ack, context }) => {
   ack()
@@ -202,7 +203,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       trigger_id: payload.trigger_id,
       view: {
         type: `modal`,
-        callback_id: `cem_edit`,
+        callback_id: CallbackId.CemEdit,
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,

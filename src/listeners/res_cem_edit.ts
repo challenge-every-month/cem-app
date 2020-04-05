@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { FieldValue, firestore } from '../initializers/firebase'
 import { Challenge, Message, Project } from '../types/slack'
+import { CallbackId } from '../types/CodeConstant'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ModalDto {
@@ -237,7 +238,7 @@ async function addBatch(
   }
 }
 
-app.view(`cem_edit`, async ({ ack, body, view, context }) => {
+app.view(CallbackId.CemEdit, async ({ ack, body, view, context }) => {
   ack()
 
   const user = body.user.id
