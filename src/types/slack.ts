@@ -82,13 +82,22 @@ export interface Project {
   updatedAt: any
   createdAt: any
 }
+
+export const ChallengeStatus = {
+  Draft: `draft`,
+  Trying: `trying`,
+  Completed: `completed`,
+  Incompleted: `incompleted`,
+} as const
+type ChallengeStatus = typeof ChallengeStatus[keyof typeof ChallengeStatus]
+
 export interface Challenge {
   // @ts-ignore
   challenger: FirebaseFirestore.DocumentReference
   year: number
   month: number
   name: string
-  status: `draft` | `trying` | `completed` | `incompleted`
+  status: ChallengeStatus
   updatedAt: any
   createdAt: any
 }
