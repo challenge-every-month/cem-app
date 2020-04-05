@@ -1,6 +1,12 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Message, Block, Command, CallbackId } from '../types/slack'
+import {
+  Message,
+  Block,
+  Command,
+  CallbackId,
+  ProjectStatus,
+} from '../types/slack'
 
 app.command(Command.CemReview, async ({ payload, ack, context }) => {
   ack()
@@ -9,7 +15,7 @@ app.command(Command.CemReview, async ({ payload, ack, context }) => {
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `published`)
+    .where(`status`, `==`, ProjectStatus.Published)
   const projects = await projectsQuery.get().catch(err => {
     throw new Error(err)
   })

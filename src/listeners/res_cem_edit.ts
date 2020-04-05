@@ -1,6 +1,13 @@
 import { app } from '../initializers/bolt'
 import { FieldValue, firestore } from '../initializers/firebase'
-import { CallbackId, Challenge, Message, Project } from '../types/slack'
+import {
+  CallbackId,
+  Challenge,
+  ChallengeStatus,
+  Message,
+  Project,
+  ProjectStatus,
+} from '../types/slack'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ModalDto {
@@ -177,7 +184,7 @@ async function addProjectBatch(
     year: modalDto.year,
     month: modalDto.month,
     title: modalDto.projectTitle,
-    status: `draft`,
+    status: ProjectStatus.Draft,
     description: modalDto.description,
     updatedAt: timestamp,
     createdAt: timestamp,
@@ -205,7 +212,7 @@ async function addChallengeBatch(
       year: modalDto.year,
       month: modalDto.month,
       name: challengeName,
-      status: `draft`,
+      status: ChallengeStatus.Draft,
       updatedAt: timestamp,
       createdAt: timestamp,
     }

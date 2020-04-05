@@ -1,6 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, CallbackId, Message } from '../types/slack'
+import { Block, CallbackId, Message, ProjectStatus } from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
 
@@ -16,7 +16,7 @@ app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `published`)
+    .where(`status`, `==`, ProjectStatus.Published)
   // .where(`year`, `==`, thisYear)
   // .where(`month`, `==`, thisMonth)
 

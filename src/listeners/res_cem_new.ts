@@ -1,6 +1,12 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Message, Project, Challenge, CallbackId } from '../types/slack'
+import {
+  Message,
+  Project,
+  Challenge,
+  CallbackId,
+  ProjectStatus,
+} from '../types/slack'
 
 app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
   ack()
@@ -25,7 +31,7 @@ app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
     year: Number(year),
     month: Number(month),
     title: projectTitle,
-    status: `draft`,
+    status: ProjectStatus.Draft,
     description: description,
     updatedAt: timestamp,
     createdAt: timestamp,

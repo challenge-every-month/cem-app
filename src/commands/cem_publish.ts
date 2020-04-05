@@ -1,6 +1,12 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, Command, Message } from '../types/slack'
+import {
+  Block,
+  ChallengeStatus,
+  Command,
+  Message,
+  ProjectStatus,
+} from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
 
@@ -18,7 +24,7 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
     .where(`challenger`, `==`, challengerRef)
     .where(`year`, `==`, thisYear)
     .where(`month`, `==`, thisMonth)
-    .where(`status`, `==`, `draft`)
+    .where(`status`, `==`, ProjectStatus.Draft)
 
   try {
     const projects = await projectsQuery.get().catch(err => {
@@ -49,7 +55,7 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
     ]
     for (const project of projects.docs) {
       batch.update(project.ref, {
-        status: `published`,
+        status: ProjectStatus.Published,
         updatedAt: timestamp,
       })
       let projectText = ``
@@ -58,7 +64,7 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
       const challenges = await project.ref.collection(`challenges`).get()
       for (const challenge of challenges.docs) {
         batch.update(challenge.ref, {
-          status: `trying`,
+          status: ChallengeStatus.Trying,
           updatedAt: timestamp,
         })
         const chalData = challenge.data()
