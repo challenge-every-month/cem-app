@@ -1,5 +1,5 @@
 import { expressReceiver } from '../initializers/bolt'
-import { EndPoint } from '../types/CodeConstant'
+import { EndPoint } from '../types/slack'
 
 expressReceiver.app.get(EndPoint.Welcome, (req, res) => {
   res.status(200).render(`index`, {

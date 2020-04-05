@@ -1,6 +1,5 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message } from '../types/slack'
-import { CallbackId, Command } from '../types/CodeConstant'
+import { Option, Modal, Message, Command, CallbackId } from '../types/slack'
 
 app.command(Command.CemNew, async ({ payload, ack, context }) => {
   ack()

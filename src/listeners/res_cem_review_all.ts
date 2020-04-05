@@ -1,8 +1,8 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, Message } from '../types/slack'
+import { Block, CallbackId, Message } from '../types/slack'
+// @ts-ignore
 import * as config from 'config'
-import { CallbackId } from '../types/CodeConstant'
 
 app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
   ack()

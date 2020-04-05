@@ -1,6 +1,5 @@
 import { app } from '../initializers/bolt'
-import { Message } from '../types/slack'
-import { Command } from '../types/CodeConstant'
+import { Command, Message } from '../types/slack'
 
 const helpText = `
 こんにちは、CEMたろうです。\n

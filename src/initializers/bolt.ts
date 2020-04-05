@@ -1,6 +1,6 @@
 // @ts-ignore
 import { App, LogLevel, ExpressReceiver } from '@slack/bolt'
-import { EndPoint } from '../types/CodeConstant'
+import { EndPoint } from '../types/slack'
 
 // Initialize your own ExpressReceiver
 export const expressReceiver = new ExpressReceiver({

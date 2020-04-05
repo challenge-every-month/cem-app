@@ -1,9 +1,8 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, Message } from '../types/slack'
+import { Block, Command, Message } from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
-import { Command } from '../types/CodeConstant'
 
 app.command(Command.CemPublish, async ({ payload, ack, context }) => {
   ack()

@@ -1,7 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Option, Modal, Message } from '../types/slack'
-import { CallbackId, Command } from '../types/CodeConstant'
+import { Option, Modal, Message, Command, CallbackId } from '../types/slack'
 
 app.command(Command.CemDelete, async ({ payload, ack, context }) => {
   ack()

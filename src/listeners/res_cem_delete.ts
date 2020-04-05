@@ -1,7 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Message } from '../types/slack'
-import { CallbackId } from '../types/CodeConstant'
+import { CallbackId, Message } from '../types/slack'
 
 app.view(CallbackId.CemDelete, async ({ ack, body, view, context }) => {
   ack()

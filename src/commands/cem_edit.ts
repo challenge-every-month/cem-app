@@ -1,7 +1,6 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message } from '../types/slack'
+import { Option, Modal, Message, Command, CallbackId } from '../types/slack'
 import { firestore } from '../initializers/firebase'
-import { CallbackId, Command } from '../types/CodeConstant'
 
 app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   ack()

@@ -1,7 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Message, Project, Challenge } from '../types/slack'
-import { CallbackId } from '../types/CodeConstant'
+import { Message, Project, Challenge, CallbackId } from '../types/slack'
 
 app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
   ack()

@@ -1,7 +1,6 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Message, Challenger } from '../types/slack'
-import { Command } from '../types/CodeConstant'
+import { Message, Challenger, Command } from '../types/slack'
 
 app.command(Command.CemRegister, async ({ payload, ack, context }) => {
   ack()

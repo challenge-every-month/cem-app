@@ -1,8 +1,7 @@
 import { app, expressReceiver } from '../initializers/bolt'
-import { Message } from '../types/slack'
+import { EndPoint, Message } from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
-import { EndPoint } from '../types/CodeConstant'
 
 expressReceiver.app.get(EndPoint.Remind, (req, res) => {
   res.sendStatus(200)
