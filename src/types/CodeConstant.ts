@@ -16,3 +16,11 @@ export const Command = {
   CemRegister: `/cem_register`,
 } as const
 type Command = typeof Command[keyof typeof Command]
+
+export const EndPoint = {
+  Event: `/slack/events`, // コマンドを受けるためのエンドポイント
+  Deploying: `/slack/deploying`,
+  Deployed: `/slack/deployed`,
+  Remind: `/slack/remind`,
+  Welcome: `/`,
+} as const

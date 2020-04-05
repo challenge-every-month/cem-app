@@ -1,8 +1,9 @@
 import { app, expressReceiver } from '../initializers/bolt'
 import { Message } from '../types/slack'
 import * as config from 'config'
+import { EndPoint } from '../types/CodeConstant'
 
-expressReceiver.app.get(`/slack/deploying`, (req, res) => {
+expressReceiver.app.get(EndPoint.Deploying, (req, res) => {
   res.sendStatus(200)
   const channels: any = config.get(`Slack.Channels`)
   const msg: Message = {
@@ -15,7 +16,7 @@ expressReceiver.app.get(`/slack/deploying`, (req, res) => {
     throw new Error(err)
   })
 })
-expressReceiver.app.get(`/slack/deployed`, (req, res) => {
+expressReceiver.app.get(EndPoint.Deployed, (req, res) => {
   res.sendStatus(200)
   const channels: any = config.get(`Slack.Channels`)
   const msg: Message = {

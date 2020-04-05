@@ -1,8 +1,10 @@
 import { app, expressReceiver } from '../initializers/bolt'
 import { Message } from '../types/slack'
+// @ts-ignore
 import * as config from 'config'
+import { EndPoint } from '../types/CodeConstant'
 
-expressReceiver.app.get(`/slack/remind`, (req, res) => {
+expressReceiver.app.get(EndPoint.Remind, (req, res) => {
   res.sendStatus(200)
   const fromCron = req.header(`X-Appengine-Cron`) === `true`
   const channels: any = config.get(`Slack.Channels`)
