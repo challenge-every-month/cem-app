@@ -24,7 +24,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
     return app.client.chat.postEphemeral(msg as any)
   }
 
-  let index = 0
+  // let index = 0
   const blocks: any[] = []
   // async/awaitを使いたいので、for-ofを使用している
   for (const project of projects.docs) {
@@ -41,62 +41,81 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
       },
     })
 
-    let challengeText: string = ``
     challenges.docs.forEach(challenge => {
       const challengeData = challenge.data()
-      challengeText += challengeData.name + `\n`
-    })
-    blocks.push({
-      type: `input`,
-      block_id: `challenges${index}`,
-      label: {
-        type: `plain_text`,
-        text: `挑戦`,
-        emoji: true,
-      },
-      hint: {
-        type: `plain_text`,
-        text: `挑戦が複数ある場合は改行します。1行1挑戦として入力できます`,
-      },
-      element: {
-        type: `plain_text_input`,
-        multiline: true,
-        action_id: `challenges${index}`,
-        initial_value: challengeText,
-        placeholder: {
+      blocks.push({
+        type: `section`,
+        text: {
+          type: `mrkdwn`,
+          text: `挑戦：${challengeData.name}`,
+        },
+        accessory: {
+          type: `static_select`,
+          options: [
+            {
+              text: {
+                type: `plain_text`,
+                text: `未着手`,
+                emoji: true,
+              },
+              value: `notStarted`,
+            },
+            {
+              text: {
+                type: `plain_text`,
+                text: `進捗半分以下`,
+                emoji: true,
+              },
+              value: `lessHalf`,
+            },
+            {
+              text: {
+                type: `plain_text`,
+                text: `進捗半分以上`,
+                emoji: true,
+              },
+              value: `overHalf`,
+            },
+            {
+              text: {
+                type: `plain_text`,
+                text: `完了済`,
+                emoji: true,
+              },
+              value: `completed`,
+            },
+          ],
+          initial_option: {
+            text: {
+              type: `plain_text`,
+              text: `未着手`,
+              emoji: true,
+            },
+            value: `notStarted`,
+          },
+        },
+      })
+
+      blocks.push({
+        type: `input`,
+        element: {
+          type: `plain_text_input`,
+          // multiline: true,
+          initial_value: projData.description,
+          action_id: `description`,
+          placeholder: {
+            type: `plain_text`,
+            text: `挑戦に対するコメント`,
+          },
+        },
+        label: {
           type: `plain_text`,
+          text: `コメント`,
           emoji: true,
-          text: `毎週ブログを書く\n積ん読を1冊解消する`,
         },
-      },
+      })
     })
-
-    blocks.push({
-      type: `input`,
-      block_id: `description${index}`,
-      label: {
-        type: `plain_text`,
-        text: `説明`,
-        emoji: true,
-      },
-      optional: true,
-      hint: {
-        type: `plain_text`,
-        text: `プロジェクトに補足説明があれば入力します`,
-      },
-      element: {
-        type: `plain_text_input`,
-        multiline: true,
-        initial_value: projData.description,
-        action_id: `description${index}`,
-        placeholder: {
-          type: `plain_text`,
-          text: `説明の内容`,
-        },
-      },
-    })
-
-    index += 1
+    break
   }
 
   try {
