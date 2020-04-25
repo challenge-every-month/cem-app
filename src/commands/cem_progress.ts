@@ -17,7 +17,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
   if (projects.docs.length === 0) {
     const msg: Message = {
       token: context.botToken,
-      text: `振り返りできるプロジェクトはありません`,
+      text: `中間報告できるプロジェクトはありません`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
@@ -45,20 +45,22 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
       const challengeData = challenge.data()
       blocks.push({
         type: `section`,
-        block_id: `achievement_${project.ref.id}_${challenge.ref.id}`,
         text: {
           type: `mrkdwn`,
           text: `挑戦：${challengeData.name}`,
         },
         accessory: {
-          action_id: `achievement`,
+          action_id: `progress_${project.ref.id}_${challenge.ref.id}`,
           type: `static_select`,
+          placeholder: {
+            type: `plain_text`,
+            text: `進捗を選択`,
+          },
           options: [
             {
               text: {
                 type: `plain_text`,
                 text: `未着手`,
-                emoji: true,
               },
               value: `notStarted`,
             },
@@ -66,7 +68,6 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
               text: {
                 type: `plain_text`,
                 text: `進捗半分以下`,
-                emoji: true,
               },
               value: `lessHalf`,
             },
@@ -74,7 +75,6 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
               text: {
                 type: `plain_text`,
                 text: `進捗半分以上`,
-                emoji: true,
               },
               value: `overHalf`,
             },
@@ -82,19 +82,10 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
               text: {
                 type: `plain_text`,
                 text: `完了済`,
-                emoji: true,
               },
               value: `completed`,
             },
           ],
-          initial_option: {
-            text: {
-              type: `plain_text`,
-              text: `未着手`,
-              emoji: true,
-            },
-            value: `notStarted`,
-          },
         },
       })
 
