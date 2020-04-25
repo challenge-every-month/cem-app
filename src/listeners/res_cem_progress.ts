@@ -1,13 +1,13 @@
 import { app } from '../initializers/bolt'
 import { FieldValue, firestore } from '../initializers/firebase'
-// import { Message } from '../types/slack'
-// import * as config from 'config'
+import { Block, Message } from '../types/slack'
+import * as config from 'config'
 
-app.view(`cem_progress`, async ({ ack, body, view }) => {
+app.view(`cem_progress`, async ({ ack, body, view, context }) => {
   ack()
   const payload = (view.state as any).values
 
-  // const channel: any = config.get(`Slack.Channels.review`)
+  const channel: any = config.get(`Slack.Channels.progress`)
 
   const user = body.user.id
   const challengerRef = firestore.collection(`challengers`).doc(user)
@@ -16,15 +16,27 @@ app.view(`cem_progress`, async ({ ack, body, view }) => {
     .where(`challenger`, `==`, challengerRef)
     .where(`status`, `==`, `published`)
 
+  const challenger = await challengerRef.get()
+  const challengerName = challenger.data()!.displayName
+  const iconUrl = challenger.data()!.iconUrl
+  const blocks: Block[] = [
+    {
+      type: `section`,
+      text: {
+        type: `mrkdwn`,
+        text: `${challengerName}さんが挑戦目標を振り返りました`,
+      },
+    },
+  ]
+
   const projects = await projectsQuery.get().catch(err => {
     throw new Error(err)
   })
 
   const timestamp = await FieldValue.serverTimestamp()
   const batch = firestore.batch()
-  // console.log({ project: projects })
   for (const project of projects.docs) {
-    // console.log({ project: project.ref.id })
+    const projData = project.data()
     const challengeRef = projectsRef
       .doc(project.ref.id)
       .collection(`challenges`)
@@ -33,72 +45,60 @@ app.view(`cem_progress`, async ({ ack, body, view }) => {
     const challenges = await challengeQuery.get().catch(err => {
       throw new Error(err)
     })
-    // console.log({ challenge: challenges })
 
     for (const challenge of challenges.docs) {
-      const achievement =
-        payload[`achievement_${project.ref.id}_${challenge.ref.id}`].achievement
-          .value || ``
+      let projectText = `>>>*${projData.title}*\n`
       const comment =
         payload[`comment_${project.ref.id}_${challenge.ref.id}`].comment
           .value || ``
 
-      console.log({ achievement: achievement })
-      console.log({ com: comment })
-
       batch.update(challenge.ref, {
-        achievement: achievement,
         progressComment: comment,
         updatedAt: timestamp,
       })
-    }
+      const chalData = challenge.data()
 
-    // batch.update(project.ref, {
-    //   achievement: ``,
-    //   reviewComment: comment,
-    //   updatedAt: timestamp,
-    // })
-    // // let projectText = ``
-    // // const projData = project.data()
-    // // projectText += `>>>*${projData.title}*\n`
-    // const challenges = await project.ref.collection(`challenges`).get()
-    // for (const challenge of challenges.docs) {
-    //   const chalData = challenge.data()
-    //   console.log({ chalData: chalData })
-    //   // let icon = ``
-    // switch (chalData.status) {
-    // case `completed`:
-    //   icon = `:white_check_mark:`
-    //   break
-    // case `incompleted`:
-    //   icon = `:x:`
-    //   break
-    // default:
-    //   icon = `:black_square_button:`
-    //   break
-    // }
-    // projectText += `${icon} ${chalData.name}\n`
+      let jaStatus = ``
+      switch (chalData.status) {
+        case `completed`:
+          jaStatus = `完了済`
+          break
+        case `lessHalf`:
+          jaStatus = `進捗半分以下`
+          break
+        case `overHalf`:
+          jaStatus = `進捗半分以上`
+          break
+        default:
+          jaStatus = `未着手`
+          break
+      }
+      projectText += `進捗：${jaStatus}\n挑戦：${chalData.name}\n`
+      projectText += comment
+      blocks.push({
+        type: `section`,
+        text: {
+          type: `mrkdwn`,
+          text: projectText,
+        },
+      })
+    }
   }
-  // projectText += `${projData.description}`
-  // projectText += comment
-  // blocks.push({
-  //   type: `section`,
-  //   text: {
-  //     type: `mrkdwn`,
-  //     text: projectText,
-  //   },
-  // }
-  // )
 
   await batch.commit()
-  // // 成功をSlack通知
-  // const msg: Message = {
-  //   token: context.botToken,
-  //   text: `プロジェクトを修正しました`,
-  //   channel: body.view.private_metadata,
-  //   user: user,
-  // }
-  // await app.client.chat.postEphemeral(msg as any).catch(err => {
-  //   throw new Error(err)
-  // })
+  // 成功をSlack通知
+  const msg: Message = {
+    token: context.botToken,
+    text: {
+      type: `mrkdwn`,
+      text: `${challengerName}さんが挑戦目標を振り返りました`,
+    },
+    blocks: blocks,
+    channel: channel,
+    username: challengerName,
+    icon_url: iconUrl,
+  }
+  await app.client.chat.postMessage(msg as any).catch(err => {
+    throw new Error(err)
+  })
 })

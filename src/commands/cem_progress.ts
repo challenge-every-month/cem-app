@@ -109,7 +109,6 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
         },
       })
     })
-    // break
   }
 
   try {
