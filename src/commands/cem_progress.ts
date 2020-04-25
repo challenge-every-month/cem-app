@@ -8,7 +8,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `draft`)
+    .where(`status`, `==`, `published`)
 
   const projects = await projectsQuery.get().catch(err => {
     throw new Error(err)
@@ -17,7 +17,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
   if (projects.docs.length === 0) {
     const msg: Message = {
       token: context.botToken,
-      text: `修正できるプロジェクトはありません`,
+      text: `振り返りできるプロジェクトはありません`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
@@ -45,11 +45,13 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
       const challengeData = challenge.data()
       blocks.push({
         type: `section`,
+        block_id: `achievement_${project.ref.id}_${challenge.ref.id}`,
         text: {
           type: `mrkdwn`,
           text: `挑戦：${challengeData.name}`,
         },
         accessory: {
+          action_id: `achievement`,
           type: `static_select`,
           options: [
             {
@@ -98,11 +100,12 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
 
       blocks.push({
         type: `input`,
+        block_id: `comment_${project.ref.id}_${challenge.ref.id}`,
         element: {
           type: `plain_text_input`,
           // multiline: true,
           initial_value: projData.description,
-          action_id: `description`,
+          action_id: `comment`,
           placeholder: {
             type: `plain_text`,
             text: `挑戦に対するコメント`,
@@ -115,7 +118,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
         },
       })
     })
-    break
+    // break
   }
 
   try {
