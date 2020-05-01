@@ -7,20 +7,16 @@ import { app, expressReceiver } from './initializers/bolt'
 })()
 app.error(console.log)
 
-require(`./commands/echo`)
-require(`./commands/cem_help`)
-require(`./commands/cem_register`)
-require(`./commands/cem_new`)
-require(`./commands/cem_publish`)
-require(`./commands/cem_delete`)
-require(`./commands/cem_review`)
-require(`./commands/cem_edit`)
-require(`./messages/exercise`)
-require(`./listeners/res_cem_new`)
-require(`./listeners/res_cem_delete`)
-require(`./listeners/res_cem_review_challenge`)
-require(`./listeners/res_cem_review_all`)
-require(`./listeners/res_cem_edit`)
-require(`./requests/remind`)
-require(`./requests/deploy`)
-require(`./requests/pages`)
+// 動的にboltに対してrequiredしに行くロジック。
+const fs = require(`fs`)
+const contextRoot = `./src` // srcのrootPath
+const paths: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
+
+paths.forEach(path => {
+  fs.readdir(contextRoot + `/` + path, function(err: any, files: string[]) {
+    if (err) throw err
+    files.forEach(file => {
+      require(`./` + path + `/` + file)
+    })
+  })
+})
