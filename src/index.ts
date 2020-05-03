@@ -9,14 +9,19 @@ app.error(console.log)
 
 // 動的にboltに対してrequiredしに行くロジック。
 const fs = require(`fs`)
-const contextRoot = `./src` // srcのrootPath
+const contextRoot = `./` + process.argv[2] // rootPath(検証中はsrc、本番はコンパイル後のdistにしたいので、パラメータで渡すことにする。)
 const paths: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
 
 paths.forEach(path => {
   fs.readdir(contextRoot + `/` + path, function(err: any, files: string[]) {
     if (err) throw err
-    files.forEach(file => {
-      require(`./` + path + `/` + file)
-    })
+    files
+      .filter(file => {
+        // tsのコンパイル後のxx.js.mapを読み込まないようにする。
+        return !file.match(`.js.map`)
+      })
+      .forEach(file => {
+        require(`./` + path + `/` + file)
+      })
   })
 })
