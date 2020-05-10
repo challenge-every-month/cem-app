@@ -9,13 +9,13 @@ import * as config from 'config'
 app.error(console.log)
 
 // 動的にboltに対してrequiredしに行くロジック。
-const loadPath: any = config.get(`LoadPath`)
+const contextRoot: any = config.get(`ContextRoot`) // 検証中はsrc、本番はコンパイル後のdistにしたい
+const path = require(`path`)
 const fs = require(`fs`)
-const contextRoot = `./` + loadPath // 検証中はsrc、本番はコンパイル後のdistにしたい
-const paths: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
+const dirs: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
 
-paths.forEach(path => {
-  fs.readdir(contextRoot + `/` + path, function(err: any, files: string[]) {
+dirs.forEach(dir => {
+  fs.readdir(path.join(contextRoot, dir), function(err: any, files: string[]) {
     if (err) throw err
     files
       .filter(file => {
@@ -23,7 +23,8 @@ paths.forEach(path => {
         return !file.match(`.js.map`)
       })
       .forEach(file => {
-        require(`./` + path + `/` + file)
+        // pathで./をうまく表現できなかったので、rootPathは加算することに。
+        require(`./` + path.join(dir, file))
       })
   })
 })

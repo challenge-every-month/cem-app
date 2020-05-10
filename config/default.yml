@@ -1,4 +1,4 @@
-LoadPath: src
+ContextRoot: src
 Slack:
   Channels:
     publish: CQD6XBSR3
