@@ -58,22 +58,27 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
       })
       const chalData = challenge.data()
 
+      let icon = ``
       let jaStatus = ``
       switch (chalData.status) {
         case `completed`:
+          icon = `:white_check_mark:`
           jaStatus = `達成済`
           break
         case `lessHalf`:
+          icon = `:arrow_forward:`
           jaStatus = `進捗半分以下`
           break
         case `overHalf`:
+          icon = `:fast_forward:`
           jaStatus = `進捗半分以上`
           break
         default:
+          icon = `:heavy_minus_sign:`
           jaStatus = `未着手`
           break
       }
-      projectText += `進捗：${jaStatus}\n挑戦：${chalData.name}\n`
+      projectText += `${icon}(${jaStatus})\n挑戦：${chalData.name}\n`
       projectText += comment
       blocks.push({
         type: `section`,
