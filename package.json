@@ -9,7 +9,7 @@
   "scripts": {
     "prestart": "npm run gcp-build",
     "gcp-build": "tsc -p .",
-    "start": "node ./dist/index.js dist",
+    "start": "node ./dist/index.js",
     "watch": "nodemon",
     "dev": "nf start",
     "test": "jest",

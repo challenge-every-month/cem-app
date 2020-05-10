@@ -1,4 +1,5 @@
 import { app, expressReceiver } from './initializers/bolt'
+import * as config from 'config'
 ;(async () => {
   // Start your app
   await app.start(process.env.PORT || 3000)
@@ -8,8 +9,9 @@ import { app, expressReceiver } from './initializers/bolt'
 app.error(console.log)
 
 // 動的にboltに対してrequiredしに行くロジック。
+const loadPath: any = config.get(`LoadPath`)
 const fs = require(`fs`)
-const contextRoot = `./` + process.argv[2] // rootPath(検証中はsrc、本番はコンパイル後のdistにしたいので、パラメータで渡すことにする。)
+const contextRoot = `./` + loadPath // 検証中はsrc、本番はコンパイル後のdistにしたい
 const paths: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
 
 paths.forEach(path => {

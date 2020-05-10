@@ -1,3 +1,4 @@
+LoadPath: dist
 Slack:
   Channels:
     publish: CGK3VESBC # 01_目標

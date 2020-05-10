@@ -1,3 +1,4 @@
+LoadPath: src
 Slack:
   Channels:
     publish: CQD6XBSR3
