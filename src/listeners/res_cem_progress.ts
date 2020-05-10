@@ -61,7 +61,7 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
       let jaStatus = ``
       switch (chalData.status) {
         case `completed`:
-          jaStatus = `完了済`
+          jaStatus = `達成済`
           break
         case `lessHalf`:
           jaStatus = `進捗半分以下`
