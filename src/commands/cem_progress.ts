@@ -60,28 +60,28 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
             {
               text: {
                 type: `plain_text`,
-                text: `未着手`,
+                text: `:heavy_minus_sign: 未着手`,
               },
               value: `notStarted`,
             },
             {
               text: {
                 type: `plain_text`,
-                text: `進捗半分以下`,
+                text: `:arrow_forward: 進捗半分以下`,
               },
               value: `lessHalf`,
             },
             {
               text: {
                 type: `plain_text`,
-                text: `進捗半分以上`,
+                text: `:fast_forward: 進捗半分以上`,
               },
               value: `overHalf`,
             },
             {
               text: {
                 type: `plain_text`,
-                text: `完了済`,
+                text: `:white_check_mark: 達成済`,
               },
               value: `completed`,
             },
