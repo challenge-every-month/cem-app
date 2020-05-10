@@ -1,4 +1,5 @@
 import { app, expressReceiver } from './initializers/bolt'
+import * as config from 'config'
 ;(async () => {
   // Start your app
   await app.start(process.env.PORT || 3000)
@@ -7,23 +8,23 @@ import { app, expressReceiver } from './initializers/bolt'
 })()
 app.error(console.log)
 
-require(`./commands/echo`)
-require(`./commands/cem_help`)
-require(`./commands/cem_register`)
-require(`./commands/cem_new`)
-require(`./commands/cem_progress`)
-require(`./commands/cem_publish`)
-require(`./commands/cem_delete`)
-require(`./commands/cem_review`)
-require(`./commands/cem_edit`)
-require(`./messages/exercise`)
-require(`./listeners/res_cem_new`)
-require(`./listeners/res_cem_delete`)
-require(`./listeners/res_cem_progress_challenge`)
-require(`./listeners/res_cem_progress`)
-require(`./listeners/res_cem_review_challenge`)
-require(`./listeners/res_cem_review_all`)
-require(`./listeners/res_cem_edit`)
-require(`./requests/remind`)
-require(`./requests/deploy`)
-require(`./requests/pages`)
+// 動的にboltに対してrequiredしに行くロジック。
+const contextRoot: any = config.get(`ContextRoot`) // 検証中はsrc、本番はコンパイル後のdistにしたい
+const path = require(`path`)
+const fs = require(`fs`)
+const dirs: string[] = [`commands`, `messages`, `listeners`, `requests`] // appに対してimportする対象ディレクトリ
+
+dirs.forEach(dir => {
+  fs.readdir(path.join(contextRoot, dir), function(err: any, files: string[]) {
+    if (err) throw err
+    files
+      .filter(file => {
+        // tsのコンパイル後のxx.js.mapを読み込まないようにする。
+        return !file.match(`.js.map`)
+      })
+      .forEach(file => {
+        // pathで./をうまく表現できなかったので、rootPathは加算することに。
+        require(`./` + path.join(dir, file))
+      })
+  })
+})

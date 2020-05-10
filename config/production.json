@@ -1,4 +1,5 @@
 {
+  "ContextRoot": "dist",
   "Slack": {
     "Channels": {
       "publish": "CGK3VESBC",
