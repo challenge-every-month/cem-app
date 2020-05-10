@@ -46,8 +46,8 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
       throw new Error(err)
     })
 
+    let projectText: string = `*${projData.title}*\n`
     for (const challenge of challenges.docs) {
-      let projectText = `>>>*${projData.title}*\n`
       const tmpComment =
         payload[`comment_${project.ref.id}_${challenge.ref.id}`].comment.value
       const comment = tmpComment === undefined ? `` : tmpComment
@@ -57,6 +57,12 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
         updatedAt: timestamp,
       })
       const chalData = challenge.data()
+
+      if (!projectText.includes(`>>>`)) {
+        projectText += `>>>`
+      }
+
+      projectText += `*${chalData.name}*\n`
 
       let icon = ``
       let jaStatus = ``
@@ -78,16 +84,17 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
           jaStatus = `未着手`
           break
       }
-      projectText += `${icon}(${jaStatus})\n挑戦：${chalData.name}\n`
-      projectText += comment
-      blocks.push({
-        type: `section`,
-        text: {
-          type: `mrkdwn`,
-          text: projectText,
-        },
-      })
+      projectText += `${icon}(${jaStatus})\n`
+      projectText += `${comment}\n\n`
     }
+
+    blocks.push({
+      type: `section`,
+      text: {
+        type: `mrkdwn`,
+        text: projectText,
+      },
+    })
   }
 
   await batch.commit()
