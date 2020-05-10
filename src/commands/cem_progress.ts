@@ -102,6 +102,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
             text: `挑戦に対するコメント`,
           },
         },
+        optional: true,
         label: {
           type: `plain_text`,
           text: `コメント`,

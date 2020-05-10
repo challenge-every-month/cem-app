@@ -48,9 +48,9 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
 
     for (const challenge of challenges.docs) {
       let projectText = `>>>*${projData.title}*\n`
-      const comment =
-        payload[`comment_${project.ref.id}_${challenge.ref.id}`].comment
-          .value || ``
+      const tmpComment =
+        payload[`comment_${project.ref.id}_${challenge.ref.id}`].comment.value
+      const comment = tmpComment === undefined ? `` : tmpComment
 
       batch.update(challenge.ref, {
         progressComment: comment,
