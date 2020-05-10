@@ -11,9 +11,12 @@ class Project
 note left: challengeを複数纏めたもの。\n月ごとに複数設定できる。\nジャンル分けに使用する想定。
 class Challenge
 note left: 挑戦や目標。\n1行程度を想定しており、projectに属する
+class Comment
+note left: 挑戦や目標一つ一つに対する振り返りコメント
 
 Challenger <-->"0..*{unique}" Month
 Month <-->"1..*"Project
 Project <--> "1..*" Challenge
+Challenge <--> Comment
 
 @enduml
