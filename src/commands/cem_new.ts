@@ -1,13 +1,14 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Command, CallbackId } from '../types/slack'
+import { Command, CallbackId } from '../types/slack'
 import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
 app.command(Command.CemNew, async ({ payload, ack, context }) => {
   ack()
   const now = new Date()
   const thisYear = now.getFullYear()
   const thisMonth = now.getMonth() + 1
-  const monthOptions: Option[] = Array.from(Array(12).keys()).map(m => {
+  const monthOptions: index.Option[] = Array.from(Array(12).keys()).map(m => {
     return {
       text: {
         type: `plain_text`,
@@ -18,7 +19,7 @@ app.command(Command.CemNew, async ({ payload, ack, context }) => {
     }
   })
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
@@ -177,7 +178,7 @@ app.command(Command.CemNew, async ({ payload, ack, context }) => {
         ],
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
     const msg: methods.ChatPostEphemeralArguments = {

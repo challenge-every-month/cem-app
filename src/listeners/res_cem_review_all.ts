@@ -1,9 +1,9 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, CallbackId, ProjectStatus } from '../types/slack'
-// @ts-ignore
+import { CallbackId, ProjectStatus } from '../types/slack'
 import * as config from 'config'
 import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
 app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
   ack()
@@ -39,7 +39,7 @@ app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
     const challenger = await challengerRef.get()
     const challengerName = challenger.data()!.displayName
     const iconUrl = challenger.data()!.iconUrl
-    const blocks: Block[] = [
+    const blocks: index.SectionBlock[] = [
       {
         type: `section`,
         text: {

@@ -1,7 +1,8 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Block, Command, CallbackId, ProjectStatus } from '../types/slack'
+import { Command, CallbackId, ProjectStatus } from '../types/slack'
 import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
 app.command(Command.CemReview, async ({ payload, ack, context }) => {
   ack()
@@ -23,7 +24,7 @@ app.command(Command.CemReview, async ({ payload, ack, context }) => {
     }
     return app.client.chat.postEphemeral(msg)
   }
-  const challengeOptions: any[] = [
+  const challengeOptions: index.Option[] = [
     {
       text: {
         type: `plain_text`,
@@ -39,10 +40,10 @@ app.command(Command.CemReview, async ({ payload, ack, context }) => {
       value: `incompleted`,
     },
   ]
-  const projectBlocks: any[] = []
+  const projectBlocks: index.Block[] = []
   for (const project of projects.docs) {
     const projData = project.data()
-    const block: Block = {
+    const block: index.SectionBlock = {
       type: `section`,
       text: {
         type: `mrkdwn`,
@@ -93,7 +94,7 @@ app.command(Command.CemReview, async ({ payload, ack, context }) => {
     projectBlocks.push(reviewComment)
   }
   try {
-    const modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
@@ -118,7 +119,7 @@ app.command(Command.CemReview, async ({ payload, ack, context }) => {
         blocks: projectBlocks,
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
     const msg: methods.ChatPostEphemeralArguments = {

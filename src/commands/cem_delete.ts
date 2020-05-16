@@ -1,13 +1,8 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import {
-  Option,
-  Modal,
-  Command,
-  CallbackId,
-  ProjectStatus,
-} from '../types/slack'
+import { Command, CallbackId, ProjectStatus } from '../types/slack'
 import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
 app.command(Command.CemDelete, async ({ payload, ack, context }) => {
   ack()
@@ -31,7 +26,7 @@ app.command(Command.CemDelete, async ({ payload, ack, context }) => {
     }
     return app.client.chat.postEphemeral(msg)
   }
-  const projectOptions: Option[] = projects.docs.map(project => {
+  const projectOptions: index.Option[] = projects.docs.map(project => {
     const projData = project.data()
     return {
       text: {
@@ -43,7 +38,7 @@ app.command(Command.CemDelete, async ({ payload, ack, context }) => {
     }
   })
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
@@ -91,7 +86,7 @@ app.command(Command.CemDelete, async ({ payload, ack, context }) => {
         ],
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
     const msg: methods.ChatPostEphemeralArguments = {

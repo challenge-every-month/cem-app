@@ -1,13 +1,9 @@
 import { app } from '../initializers/bolt'
-import {
-  Option,
-  Modal,
-  Command,
-  CallbackId,
-  ProjectStatus,
-} from '../types/slack'
+import { Command, CallbackId, ProjectStatus } from '../types/slack'
 import { firestore } from '../initializers/firebase'
 import * as methods from '@slack/web-api/dist/methods'
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import * as index from '@slack/types/dist/index'
 
 app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   ack()
@@ -35,7 +31,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   const now = new Date()
   const thisYear = now.getFullYear()
   const thisMonth = now.getMonth() + 1
-  const monthOptions: Option[] = Array.from(Array(12).keys()).map(m => {
+  const monthOptions: index.Option[] = Array.from(Array(12).keys()).map(m => {
     return {
       text: {
         type: `plain_text`,
@@ -47,7 +43,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   })
 
   let index = 0
-  const blocks: any[] = []
+  const blocks: index.InputBlock[] = []
   // async/awaitを使いたいので、for-ofを使用している
   for (const project of projects.docs) {
     const challlengeRef = projectsRef.doc(project.id).collection(`challenges`)
@@ -204,7 +200,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   }
 
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
@@ -229,7 +225,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
         blocks: blocks,
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
     const msg: methods.ChatPostEphemeralArguments = {
