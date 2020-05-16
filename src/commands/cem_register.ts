@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Message, Challenger, Command } from '../types/slack'
+import { Challenger, Command } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.command(Command.CemRegister, async ({ payload, ack, context }) => {
   ack()
@@ -25,7 +26,7 @@ app.command(Command.CemRegister, async ({ payload, ack, context }) => {
         .catch(err => {
           throw new Error(err)
         })
-      const msg: Message = {
+      const msg: methods.ChatPostEphemeralArguments = {
         token: context.botToken,
         text: `表示名を[${userName}]に変更しました`,
         channel: payload.channel_id,
@@ -63,23 +64,23 @@ app.command(Command.CemRegister, async ({ payload, ack, context }) => {
       })
 
     // 成功をSlack通知
-    const msg: Message = {
+    const msg: methods.ChatPostMessageArguments = {
       token: context.botToken,
       text: `*Here comes a new challenger!*\n挑戦者[${userName}]さんを新規登録しました`,
       channel: payload.channel_id,
       icon_url: `https://challenge-every-month-404e2.appspot.com/static/boy_good.png`,
     }
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } catch (error) {
     console.error(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

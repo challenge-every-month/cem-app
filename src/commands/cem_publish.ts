@@ -1,14 +1,8 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import {
-  Block,
-  ChallengeStatus,
-  Command,
-  Message,
-  ProjectStatus,
-} from '../types/slack'
-// @ts-ignore
+import { Block, ChallengeStatus, Command, ProjectStatus } from '../types/slack'
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.command(Command.CemPublish, async ({ payload, ack, context }) => {
   ack()
@@ -33,7 +27,7 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
     const batch = firestore.batch()
     const timestamp = FieldValue.serverTimestamp()
     if (projects.empty) {
-      const msg: Message = {
+      const msg: methods.ChatPostEphemeralArguments = {
         token: context.botToken,
         text: `プロジェクトが登録されていません`,
         channel: channel,
@@ -80,28 +74,25 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
       })
     }
     await batch.commit()
-    const msg: Message = {
+    const msg: methods.ChatPostMessageArguments = {
       token: context.botToken,
-      text: {
-        type: `mrkdwn`,
-        text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
-      },
+      text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
       blocks: blocks,
       channel: channel,
       username: challengerName,
       icon_url: iconUrl,
     }
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: channel,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

@@ -1,5 +1,6 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message, Command, CallbackId } from '../types/slack'
+import { Option, Modal, Command, CallbackId } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.command(Command.CemNew, async ({ payload, ack, context }) => {
   ack()
@@ -179,12 +180,12 @@ app.command(Command.CemNew, async ({ payload, ack, context }) => {
     return app.client.views.open(modal as any)
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

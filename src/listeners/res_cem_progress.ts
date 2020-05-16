@@ -1,7 +1,8 @@
 import { app } from '../initializers/bolt'
 import { FieldValue, firestore } from '../initializers/firebase'
-import { Block, Message } from '../types/slack'
+import { Block } from '../types/slack'
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.view(`cem_progress`, async ({ ack, body, view, context }) => {
   ack()
@@ -99,18 +100,15 @@ app.view(`cem_progress`, async ({ ack, body, view, context }) => {
 
   await batch.commit()
   // 成功をSlack通知
-  const msg: Message = {
+  const msg: methods.ChatPostMessageArguments = {
     token: context.botToken,
-    text: {
-      type: `mrkdwn`,
-      text: `${challengerName}さんが挑戦目標を振り返りました`,
-    },
+    text: `${challengerName}さんが挑戦目標を振り返りました`,
     blocks: blocks,
     channel: channel,
     username: challengerName,
     icon_url: iconUrl,
   }
-  await app.client.chat.postMessage(msg as any).catch(err => {
+  await app.client.chat.postMessage(msg).catch(err => {
     throw new Error(err)
   })
 })

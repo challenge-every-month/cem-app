@@ -1,12 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import {
-  Message,
-  Project,
-  Challenge,
-  CallbackId,
-  ProjectStatus,
-} from '../types/slack'
+import { Project, Challenge, CallbackId, ProjectStatus } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
   ack()
@@ -55,7 +50,7 @@ app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
   }
   await batch.commit()
   // 成功をSlack通知
-  const msg: Message = {
+  const msg: methods.ChatPostEphemeralArguments = {
     token: context.botToken,
     text: `新規プロジェクト[${projectTitle}]を[${year}-${month}]に登録しました`,
     channel: metadata,

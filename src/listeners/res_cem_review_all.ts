@@ -1,8 +1,9 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, CallbackId, Message, ProjectStatus } from '../types/slack'
+import { Block, CallbackId, ProjectStatus } from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
   ack()
@@ -27,13 +28,13 @@ app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
     const batch = firestore.batch()
     const timestamp = FieldValue.serverTimestamp()
     if (projects.empty) {
-      const msg: Message = {
+      const msg: methods.ChatPostEphemeralArguments = {
         token: context.botToken,
         text: `振り返るプロジェクトが見つかりませんでした`,
         channel: channel,
         user: user,
       }
-      return app.client.chat.postEphemeral(msg as any)
+      return app.client.chat.postEphemeral(msg)
     }
     const challenger = await challengerRef.get()
     const challengerName = challenger.data()!.displayName
@@ -85,28 +86,25 @@ app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
       })
     }
     await batch.commit()
-    const msg: Message = {
+    const msg: methods.ChatPostMessageArguments = {
       token: context.botToken,
-      text: {
-        type: `mrkdwn`,
-        text: `${challengerName}さんが挑戦目標を振り返りました`,
-      },
+      text: `${challengerName}さんが挑戦目標を振り返りました`,
       blocks: blocks,
       channel: channel,
       username: challengerName,
       icon_url: iconUrl,
     }
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: channel,
       user: user,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

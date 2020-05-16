@@ -44,18 +44,6 @@ export interface Modal {
     blocks: ModalBlock[]
   }
 }
-export interface Message {
-  token?: string
-  channel: string
-  mrkdwn?: boolean
-  text?: string | TextSection
-  user?: string
-  as_user?: boolean
-  blocks?: Block[]
-  icon_emoji?: string
-  icon_url?: string
-  username?: string
-}
 export interface Challenger {
   slackName: string
   displayName: string

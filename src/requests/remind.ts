@@ -1,7 +1,8 @@
 import { app, expressReceiver } from '../initializers/bolt'
-import { EndPoint, Message } from '../types/slack'
+import { EndPoint } from '../types/slack'
 // @ts-ignore
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
 
 expressReceiver.app.get(EndPoint.Remind, (req, res) => {
   res.sendStatus(200)
@@ -35,7 +36,7 @@ expressReceiver.app.get(EndPoint.Remind, (req, res) => {
   } else {
     postingMsg = false
   }
-  const msg: Message = {
+  const msg: methods.ChatPostMessageArguments = {
     token: process.env.SLACK_BOT_TOKEN,
     text: `<!channel>\n${text}`,
     channel: channel,

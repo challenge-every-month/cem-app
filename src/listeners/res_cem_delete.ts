@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { CallbackId, Message } from '../types/slack'
+import { CallbackId } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 app.view(CallbackId.CemDelete, async ({ ack, body, view, context }) => {
   ack()
@@ -23,13 +24,13 @@ app.view(CallbackId.CemDelete, async ({ ack, body, view, context }) => {
   batch.delete(projectRef)
   await batch.commit()
   // 成功をSlack通知
-  const msg: Message = {
+  const msg: methods.ChatPostEphemeralArguments = {
     token: context.botToken,
     text: `新規プロジェクト[${projectTitle}]を削除しました`,
     channel: metadata,
     user: user,
   }
-  await app.client.chat.postEphemeral(msg as any).catch(err => {
+  await app.client.chat.postEphemeral(msg).catch(err => {
     throw new Error(err)
   })
 })

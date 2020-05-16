@@ -1,5 +1,6 @@
 import { app } from '../initializers/bolt'
-import { Command, Message } from '../types/slack'
+import { Command } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 const helpText = `
 こんにちは、CEMたろうです。\n
@@ -54,7 +55,7 @@ const helpText = `
 app.command(Command.CemHelp, async ({ payload, ack, context }) => {
   ack()
   try {
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       mrkdwn: true,
       text: helpText,
@@ -64,12 +65,12 @@ app.command(Command.CemHelp, async ({ payload, ack, context }) => {
     return app.client.chat.postEphemeral(msg as any)
   } catch (error) {
     console.error(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

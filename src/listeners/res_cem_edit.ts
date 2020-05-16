@@ -4,10 +4,10 @@ import {
   CallbackId,
   Challenge,
   ChallengeStatus,
-  Message,
   Project,
   ProjectStatus,
 } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ModalDto {
@@ -259,13 +259,13 @@ app.view(CallbackId.CemEdit, async ({ ack, body, view, context }) => {
 
   await batch.commit()
   // 成功をSlack通知
-  const msg: Message = {
+  const msg: methods.ChatPostEphemeralArguments = {
     token: context.botToken,
     text: `プロジェクトを修正しました`,
     channel: body.view.private_metadata,
     user: user,
   }
-  await app.client.chat.postEphemeral(msg as any).catch(err => {
+  await app.client.chat.postEphemeral(msg).catch(err => {
     throw new Error(err)
   })
 })
