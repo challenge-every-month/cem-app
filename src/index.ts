@@ -22,6 +22,10 @@ dirs.forEach(dir => {
         // tsのコンパイル後のxx.js.mapを読み込まないようにする。
         return !file.match(`.js.map`)
       })
+      .filter(file => {
+        // 修正前は404.tsをloadしていなかったので、それを除外するように修正
+        return !file.match(`404`)
+      })
       .forEach(file => {
         // pathで./をうまく表現できなかったので、rootPathは加算することに。
         require(`./` + path.join(dir, file))
