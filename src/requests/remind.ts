@@ -42,7 +42,7 @@ expressReceiver.app.get(EndPoint.Remind, (req, res) => {
     channel: channel,
   }
   if (fromCron && postingMsg) {
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } else {

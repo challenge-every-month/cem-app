@@ -33,7 +33,7 @@ app.command(Command.CemPublish, async ({ payload, ack, context }) => {
         channel: channel,
         user: payload.user_id,
       }
-      return app.client.chat.postEphemeral(msg as any)
+      return app.client.chat.postEphemeral(msg)
     }
     const challenger = await challengerRef.get()
     const challengerName = challenger.data()!.displayName

@@ -56,7 +56,7 @@ app.view(CallbackId.CemNew, async ({ ack, body, view, context }) => {
     channel: metadata,
     user: user,
   }
-  await app.client.chat.postEphemeral(msg as any).catch(err => {
+  await app.client.chat.postEphemeral(msg).catch(err => {
     throw new Error(err)
   })
 })

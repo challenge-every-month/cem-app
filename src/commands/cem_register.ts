@@ -32,7 +32,7 @@ app.command(Command.CemRegister, async ({ payload, ack, context }) => {
         channel: payload.channel_id,
         user: payload.user_id,
       }
-      return app.client.chat.postEphemeral(msg as any)
+      return app.client.chat.postEphemeral(msg)
     }
     // firestoreにユーザー作成
     const challenger: Challenger = {

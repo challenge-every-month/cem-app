@@ -62,7 +62,7 @@ app.command(Command.CemHelp, async ({ payload, ack, context }) => {
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   } catch (error) {
     console.error(`Error:`, error)
     const msg: methods.ChatPostEphemeralArguments = {
