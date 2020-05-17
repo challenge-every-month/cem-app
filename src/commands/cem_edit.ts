@@ -2,7 +2,6 @@ import { app } from '../initializers/bolt'
 import { Command, CallbackId, ProjectStatus } from '../types/slack'
 import { firestore } from '../initializers/firebase'
 import * as methods from '@slack/web-api/dist/methods'
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as index from '@slack/types/dist/index'
 
 app.command(Command.CemEdit, async ({ payload, ack, context }) => {
@@ -42,7 +41,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
     }
   })
 
-  let index = 0
+  let blockIndex = 0
   const blocks: index.InputBlock[] = []
   // async/awaitを使いたいので、for-ofを使用している
   for (const project of projects.docs) {
@@ -53,7 +52,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
     // console.log(project.id)
     blocks.push({
       type: `input`,
-      block_id: `projectTitle${index}`,
+      block_id: `projectTitle${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `プロジェクト名`,
@@ -61,7 +60,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
       },
       element: {
         type: `plain_text_input`,
-        action_id: `projectTitle${index}`,
+        action_id: `projectTitle${blockIndex}`,
         initial_value: projData.title,
         placeholder: {
           type: `plain_text`,
@@ -72,7 +71,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
 
     blocks.push({
       type: `input`,
-      block_id: `year${index}`,
+      block_id: `year${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `年`,
@@ -80,7 +79,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
       },
       element: {
         type: `static_select`,
-        action_id: `year${index}`,
+        action_id: `year${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `年を選択`,
@@ -115,7 +114,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
     })
     blocks.push({
       type: `input`,
-      block_id: `month${index}`,
+      block_id: `month${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `月`,
@@ -123,7 +122,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
       },
       element: {
         type: `static_select`,
-        action_id: `month${index}`,
+        action_id: `month${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `月を選択`,
@@ -148,7 +147,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
     })
     blocks.push({
       type: `input`,
-      block_id: `challenges${index}`,
+      block_id: `challenges${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `挑戦`,
@@ -161,7 +160,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
       element: {
         type: `plain_text_input`,
         multiline: true,
-        action_id: `challenges${index}`,
+        action_id: `challenges${blockIndex}`,
         initial_value: challengeText,
         placeholder: {
           type: `plain_text`,
@@ -173,7 +172,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
 
     blocks.push({
       type: `input`,
-      block_id: `description${index}`,
+      block_id: `description${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `説明`,
@@ -188,7 +187,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
         type: `plain_text_input`,
         multiline: true,
         initial_value: projData.description,
-        action_id: `description${index}`,
+        action_id: `description${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `説明の内容`,
@@ -196,7 +195,7 @@ app.command(Command.CemEdit, async ({ payload, ack, context }) => {
       },
     })
 
-    index += 1
+    blockIndex += 1
   }
 
   try {
