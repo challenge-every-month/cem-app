@@ -1,5 +1,6 @@
 import { app } from '../initializers/bolt'
-import { Message } from '../types/slack'
+import { Command } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 const helpText = `
 こんにちは、CEMたろうです。\n
@@ -51,25 +52,25 @@ const helpText = `
 - <https://github.com/challenge-every-month/cem-app/wiki/開発ガイド|CEMたろう開発ガイド>\n
 `
 
-app.command(`/cem_help`, async ({ payload, ack, context }) => {
+app.command(Command.CemHelp, async ({ payload, ack, context }) => {
   ack()
   try {
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       mrkdwn: true,
       text: helpText,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   } catch (error) {
     console.error(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

@@ -1,9 +1,11 @@
+// @ts-ignore
 import { App, LogLevel, ExpressReceiver } from '@slack/bolt'
+import { EndPoint } from '../types/slack'
 
 // Initialize your own ExpressReceiver
 export const expressReceiver = new ExpressReceiver({
   signingSecret: process.env.SLACK_SIGNING_SECRET as string,
-  endpoints: `/slack/events`,
+  endpoints: EndPoint.Event,
   // endpoints: `/slack/events`,
 })
 

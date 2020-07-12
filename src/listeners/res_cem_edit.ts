@@ -1,6 +1,13 @@
 import { app } from '../initializers/bolt'
 import { FieldValue, firestore } from '../initializers/firebase'
-import { Challenge, Message, Project } from '../types/slack'
+import {
+  CallbackId,
+  Challenge,
+  ChallengeStatus,
+  Project,
+  ProjectStatus,
+} from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 class ModalDto {
@@ -177,7 +184,7 @@ async function addProjectBatch(
     year: modalDto.year,
     month: modalDto.month,
     title: modalDto.projectTitle,
-    status: `draft`,
+    status: ProjectStatus.Draft,
     description: modalDto.description,
     updatedAt: timestamp,
     createdAt: timestamp,
@@ -205,7 +212,7 @@ async function addChallengeBatch(
       year: modalDto.year,
       month: modalDto.month,
       name: challengeName,
-      status: `draft`,
+      status: ChallengeStatus.Draft,
       updatedAt: timestamp,
       createdAt: timestamp,
     }
@@ -237,7 +244,7 @@ async function addBatch(
   }
 }
 
-app.view(`cem_edit`, async ({ ack, body, view, context }) => {
+app.view(CallbackId.CemEdit, async ({ ack, body, view, context }) => {
   ack()
 
   const user = body.user.id
@@ -252,13 +259,13 @@ app.view(`cem_edit`, async ({ ack, body, view, context }) => {
 
   await batch.commit()
   // 成功をSlack通知
-  const msg: Message = {
+  const msg: methods.ChatPostEphemeralArguments = {
     token: context.botToken,
     text: `プロジェクトを修正しました`,
     channel: body.view.private_metadata,
     user: user,
   }
-  await app.client.chat.postEphemeral(msg as any).catch(err => {
+  await app.client.chat.postEphemeral(msg).catch(err => {
     throw new Error(err)
   })
 })

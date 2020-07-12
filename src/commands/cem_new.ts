@@ -1,12 +1,14 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message } from '../types/slack'
+import { Command, CallbackId } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
-app.command(`/cem_new`, async ({ payload, ack, context }) => {
+app.command(Command.CemNew, async ({ payload, ack, context }) => {
   ack()
   const now = new Date()
   const thisYear = now.getFullYear()
   const thisMonth = now.getMonth() + 1
-  const monthOptions: Option[] = Array.from(Array(12).keys()).map(m => {
+  const monthOptions: index.Option[] = Array.from(Array(12).keys()).map(m => {
     return {
       text: {
         type: `plain_text`,
@@ -17,12 +19,12 @@ app.command(`/cem_new`, async ({ payload, ack, context }) => {
     }
   })
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
         type: `modal`,
-        callback_id: `cem_new`,
+        callback_id: CallbackId.CemNew,
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,
@@ -176,15 +178,15 @@ app.command(`/cem_new`, async ({ payload, ack, context }) => {
         ],
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

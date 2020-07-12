@@ -1,8 +1,10 @@
 import { app, expressReceiver } from '../initializers/bolt'
-import { Message } from '../types/slack'
+import { EndPoint } from '../types/slack'
+// @ts-ignore
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
 
-expressReceiver.app.get(`/slack/remind`, (req, res) => {
+expressReceiver.app.get(EndPoint.Remind, (req, res) => {
   res.sendStatus(200)
   const fromCron = req.header(`X-Appengine-Cron`) === `true`
   const channels: any = config.get(`Slack.Channels`)
@@ -34,13 +36,13 @@ expressReceiver.app.get(`/slack/remind`, (req, res) => {
   } else {
     postingMsg = false
   }
-  const msg: Message = {
+  const msg: methods.ChatPostMessageArguments = {
     token: process.env.SLACK_BOT_TOKEN,
     text: `<!channel>\n${text}`,
     channel: channel,
   }
   if (fromCron && postingMsg) {
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } else {

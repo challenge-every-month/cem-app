@@ -1,30 +1,32 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Option, Modal, Message } from '../types/slack'
+import { Command, CallbackId, ProjectStatus } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
-app.command(`/cem_delete`, async ({ payload, ack, context }) => {
+app.command(Command.CemDelete, async ({ payload, ack, context }) => {
   ack()
 
   const challengerRef = firestore.collection(`challengers`).doc(payload.user_id)
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `draft`)
+    .where(`status`, `==`, ProjectStatus.Draft)
 
   const projects = await projectsQuery.get().catch(err => {
     throw new Error(err)
   })
 
   if (projects.docs.length === 0) {
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `削除できるプロジェクトはありません`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
-  const projectOptions: Option[] = projects.docs.map(project => {
+  const projectOptions: index.Option[] = projects.docs.map(project => {
     const projData = project.data()
     return {
       text: {
@@ -36,12 +38,12 @@ app.command(`/cem_delete`, async ({ payload, ack, context }) => {
     }
   })
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
         type: `modal`,
-        callback_id: `cem_delete`,
+        callback_id: CallbackId.CemDelete,
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,
@@ -84,15 +86,15 @@ app.command(`/cem_delete`, async ({ payload, ack, context }) => {
         ],
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

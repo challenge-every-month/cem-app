@@ -1,9 +1,11 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, Message } from '../types/slack'
+import { CallbackId, ProjectStatus } from '../types/slack'
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
-app.view(`cem_review`, async ({ ack, body, view, context }) => {
+app.view(CallbackId.CemReview, async ({ ack, body, view, context }) => {
   ack()
   const payload = (view.state as any).values
 
@@ -15,7 +17,7 @@ app.view(`cem_review`, async ({ ack, body, view, context }) => {
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `published`)
+    .where(`status`, `==`, ProjectStatus.Published)
   // .where(`year`, `==`, thisYear)
   // .where(`month`, `==`, thisMonth)
 
@@ -26,18 +28,18 @@ app.view(`cem_review`, async ({ ack, body, view, context }) => {
     const batch = firestore.batch()
     const timestamp = FieldValue.serverTimestamp()
     if (projects.empty) {
-      const msg: Message = {
+      const msg: methods.ChatPostEphemeralArguments = {
         token: context.botToken,
         text: `振り返るプロジェクトが見つかりませんでした`,
         channel: channel,
         user: user,
       }
-      return app.client.chat.postEphemeral(msg as any)
+      return app.client.chat.postEphemeral(msg)
     }
     const challenger = await challengerRef.get()
     const challengerName = challenger.data()!.displayName
     const iconUrl = challenger.data()!.iconUrl
-    const blocks: Block[] = [
+    const blocks: index.SectionBlock[] = [
       {
         type: `section`,
         text: {
@@ -84,28 +86,25 @@ app.view(`cem_review`, async ({ ack, body, view, context }) => {
       })
     }
     await batch.commit()
-    const msg: Message = {
+    const msg: methods.ChatPostMessageArguments = {
       token: context.botToken,
-      text: {
-        type: `mrkdwn`,
-        text: `${challengerName}さんが挑戦目標を振り返りました`,
-      },
+      text: `${challengerName}さんが挑戦目標を振り返りました`,
       blocks: blocks,
       channel: channel,
       username: challengerName,
       icon_url: iconUrl,
     }
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: channel,
       user: user,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

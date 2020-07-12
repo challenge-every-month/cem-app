@@ -1,9 +1,11 @@
 import { app } from '../initializers/bolt'
 import { firestore, FieldValue } from '../initializers/firebase'
-import { Block, Message } from '../types/slack'
+import { ChallengeStatus, Command, ProjectStatus } from '../types/slack'
 import * as config from 'config'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
-app.command(`/cem_publish`, async ({ payload, ack, context }) => {
+app.command(Command.CemPublish, async ({ payload, ack, context }) => {
   ack()
 
   const now = new Date()
@@ -17,7 +19,7 @@ app.command(`/cem_publish`, async ({ payload, ack, context }) => {
     .where(`challenger`, `==`, challengerRef)
     .where(`year`, `==`, thisYear)
     .where(`month`, `==`, thisMonth)
-    .where(`status`, `==`, `draft`)
+    .where(`status`, `==`, ProjectStatus.Draft)
 
   try {
     const projects = await projectsQuery.get().catch(err => {
@@ -26,18 +28,18 @@ app.command(`/cem_publish`, async ({ payload, ack, context }) => {
     const batch = firestore.batch()
     const timestamp = FieldValue.serverTimestamp()
     if (projects.empty) {
-      const msg: Message = {
+      const msg: methods.ChatPostEphemeralArguments = {
         token: context.botToken,
         text: `プロジェクトが登録されていません`,
         channel: channel,
         user: payload.user_id,
       }
-      return app.client.chat.postEphemeral(msg as any)
+      return app.client.chat.postEphemeral(msg)
     }
     const challenger = await challengerRef.get()
     const challengerName = challenger.data()!.displayName
     const iconUrl = challenger.data()!.iconUrl
-    const blocks: Block[] = [
+    const blocks: index.SectionBlock[] = [
       {
         type: `section`,
         text: {
@@ -48,7 +50,7 @@ app.command(`/cem_publish`, async ({ payload, ack, context }) => {
     ]
     for (const project of projects.docs) {
       batch.update(project.ref, {
-        status: `published`,
+        status: ProjectStatus.Published,
         updatedAt: timestamp,
       })
       let projectText = ``
@@ -57,7 +59,7 @@ app.command(`/cem_publish`, async ({ payload, ack, context }) => {
       const challenges = await project.ref.collection(`challenges`).get()
       for (const challenge of challenges.docs) {
         batch.update(challenge.ref, {
-          status: `trying`,
+          status: ChallengeStatus.Trying,
           updatedAt: timestamp,
         })
         const chalData = challenge.data()
@@ -73,28 +75,25 @@ app.command(`/cem_publish`, async ({ payload, ack, context }) => {
       })
     }
     await batch.commit()
-    const msg: Message = {
+    const msg: methods.ChatPostMessageArguments = {
       token: context.botToken,
-      text: {
-        type: `mrkdwn`,
-        text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
-      },
+      text: `${challengerName}さんが${thisYear}年${thisMonth}月の挑戦を表明しました`,
       blocks: blocks,
       channel: channel,
       username: challengerName,
       icon_url: iconUrl,
     }
-    return app.client.chat.postMessage(msg as any).catch(err => {
+    return app.client.chat.postMessage(msg).catch(err => {
       throw new Error(err)
     })
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: channel,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

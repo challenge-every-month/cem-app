@@ -1,6 +1,7 @@
 import { app } from '../initializers/bolt'
 import { firestore } from '../initializers/firebase'
-import { Modal, Message } from '../types/slack'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
 app.command(`/cem_progress`, async ({ payload, ack, context }) => {
   ack()
@@ -15,17 +16,17 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
   })
 
   if (projects.docs.length === 0) {
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `中間報告できるプロジェクトはありません`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 
   // let index = 0
-  const blocks: any[] = []
+  const blocks: index.Block[] = []
   // async/awaitを使いたいので、for-ofを使用している
   for (const project of projects.docs) {
     const challlengeRef = projectsRef.doc(project.id).collection(`challenges`)
@@ -39,7 +40,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
         text: `プロジェクト名：${projData.title}`,
         emoji: true,
       },
-    })
+    } as index.SectionBlock)
 
     challenges.docs.forEach(challenge => {
       const challengeData = challenge.data()
@@ -87,7 +88,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
             },
           ],
         },
-      })
+      } as index.SectionBlock)
 
       blocks.push({
         type: `input`,
@@ -108,12 +109,12 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
           text: `コメント`,
           emoji: true,
         },
-      })
+      } as index.InputBlock)
     })
   }
 
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
@@ -138,15 +139,15 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
         blocks: blocks,
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })

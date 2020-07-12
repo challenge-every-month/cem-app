@@ -1,34 +1,36 @@
 import { app } from '../initializers/bolt'
-import { Option, Modal, Message } from '../types/slack'
+import { Command, CallbackId, ProjectStatus } from '../types/slack'
 import { firestore } from '../initializers/firebase'
+import * as methods from '@slack/web-api/dist/methods'
+import * as index from '@slack/types/dist/index'
 
-app.command(`/cem_edit`, async ({ payload, ack, context }) => {
+app.command(Command.CemEdit, async ({ payload, ack, context }) => {
   ack()
 
   const challengerRef = firestore.collection(`challengers`).doc(payload.user_id)
   const projectsRef = firestore.collection(`projects`)
   const projectsQuery = projectsRef
     .where(`challenger`, `==`, challengerRef)
-    .where(`status`, `==`, `draft`)
+    .where(`status`, `==`, ProjectStatus.Draft)
 
   const projects = await projectsQuery.get().catch(err => {
     throw new Error(err)
   })
 
   if (projects.docs.length === 0) {
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `修正できるプロジェクトはありません`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 
   const now = new Date()
   const thisYear = now.getFullYear()
   const thisMonth = now.getMonth() + 1
-  const monthOptions: Option[] = Array.from(Array(12).keys()).map(m => {
+  const monthOptions: index.Option[] = Array.from(Array(12).keys()).map(m => {
     return {
       text: {
         type: `plain_text`,
@@ -39,8 +41,8 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     }
   })
 
-  let index = 0
-  const blocks: any[] = []
+  let blockIndex = 0
+  const blocks: index.InputBlock[] = []
   // async/awaitを使いたいので、for-ofを使用している
   for (const project of projects.docs) {
     const challlengeRef = projectsRef.doc(project.id).collection(`challenges`)
@@ -50,7 +52,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     // console.log(project.id)
     blocks.push({
       type: `input`,
-      block_id: `projectTitle${index}`,
+      block_id: `projectTitle${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `プロジェクト名`,
@@ -58,7 +60,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
       element: {
         type: `plain_text_input`,
-        action_id: `projectTitle${index}`,
+        action_id: `projectTitle${blockIndex}`,
         initial_value: projData.title,
         placeholder: {
           type: `plain_text`,
@@ -69,7 +71,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
 
     blocks.push({
       type: `input`,
-      block_id: `year${index}`,
+      block_id: `year${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `年`,
@@ -77,7 +79,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
       element: {
         type: `static_select`,
-        action_id: `year${index}`,
+        action_id: `year${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `年を選択`,
@@ -112,7 +114,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     })
     blocks.push({
       type: `input`,
-      block_id: `month${index}`,
+      block_id: `month${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `月`,
@@ -120,7 +122,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
       element: {
         type: `static_select`,
-        action_id: `month${index}`,
+        action_id: `month${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `月を選択`,
@@ -145,7 +147,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
     })
     blocks.push({
       type: `input`,
-      block_id: `challenges${index}`,
+      block_id: `challenges${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `挑戦`,
@@ -158,7 +160,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       element: {
         type: `plain_text_input`,
         multiline: true,
-        action_id: `challenges${index}`,
+        action_id: `challenges${blockIndex}`,
         initial_value: challengeText,
         placeholder: {
           type: `plain_text`,
@@ -170,7 +172,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
 
     blocks.push({
       type: `input`,
-      block_id: `description${index}`,
+      block_id: `description${blockIndex}`,
       label: {
         type: `plain_text`,
         text: `説明`,
@@ -185,7 +187,7 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         type: `plain_text_input`,
         multiline: true,
         initial_value: projData.description,
-        action_id: `description${index}`,
+        action_id: `description${blockIndex}`,
         placeholder: {
           type: `plain_text`,
           text: `説明の内容`,
@@ -193,16 +195,16 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
       },
     })
 
-    index += 1
+    blockIndex += 1
   }
 
   try {
-    const modal: Modal = {
+    const modal: methods.ViewsOpenArguments = {
       token: context.botToken,
       trigger_id: payload.trigger_id,
       view: {
         type: `modal`,
-        callback_id: `cem_edit`,
+        callback_id: CallbackId.CemEdit,
         private_metadata: payload.channel_id,
         title: {
           type: `plain_text`,
@@ -222,15 +224,15 @@ app.command(`/cem_edit`, async ({ payload, ack, context }) => {
         blocks: blocks,
       },
     }
-    return app.client.views.open(modal as any)
+    return app.client.views.open(modal)
   } catch (error) {
     console.log(`Error:`, error)
-    const msg: Message = {
+    const msg: methods.ChatPostEphemeralArguments = {
       token: context.botToken,
       text: `Error: ${error}`,
       channel: payload.channel_id,
       user: payload.user_id,
     }
-    return app.client.chat.postEphemeral(msg as any)
+    return app.client.chat.postEphemeral(msg)
   }
 })
