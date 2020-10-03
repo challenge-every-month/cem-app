@@ -23,8 +23,8 @@ Challenge Every Monthコミュニティ用SlackApp。
 ### コマンド設計
 + [x] cem_register: 挑戦者登録
 + [x] cem_new: プロジェクトとチャレンジの登録
-+ [ ] cem_edit: 登録されたプロジェクトとチャンレンジの修正、変更
-+ [x] cem_delete: 登録されたプロジェクトとチャンレンジの削除
++ [x] cem_edit: 登録されたプロジェクトとチャレンジの修正、変更
++ [x] cem_delete: 登録されたプロジェクトとチャレンジの削除
 + [x] cem_publish: 登録されたプロジェクトの表明
 + [x] cem_review: 表明されているプロジェクトの振り返り
 
