@@ -95,7 +95,7 @@ app.command(`/cem_progress`, async ({ payload, ack, context }) => {
         block_id: `comment_${project.ref.id}_${challenge.ref.id}`,
         element: {
           type: `plain_text_input`,
-          // multiline: true,
+          multiline: true,
           initial_value: projData.description,
           action_id: `comment`,
           placeholder: {
